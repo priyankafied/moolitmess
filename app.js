@@ -41,7 +41,6 @@ const closureLines = [
 let userLights = [];
 let lightIdx = 0;
 let shuffled = [...pool].sort(() => Math.random() - 0.5);
-let thoughtTxt = "";
 
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
@@ -103,7 +102,6 @@ function doLeaveLight() {
 async function doReflect() {
   const txt = document.getElementById('thought-input').value.trim();
   if (!txt) return;
-  thoughtTxt = txt;
   document.getElementById('btn-continue').disabled = true;
   goTo('s-reflect');
 
