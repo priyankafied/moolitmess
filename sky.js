@@ -12,7 +12,6 @@
 const skyCv = document.getElementById('sky');
 const sCtx  = skyCv.getContext('2d');
 let sW, sH, stars = [], shooters = [], fr = 0;
-let skyGradient = null;   /* cached gradient */
 let animPaused = false;
 
 /* Pause animation when tab is hidden — saves CPU */
@@ -74,15 +73,8 @@ function drawSky() {
 
   sCtx.clearRect(0, 0, sW, sH);
 
-  /* Cache sky gradient — only rebuild on resize */
-  if (!skyGradient) {
-    skyGradient = sCtx.createLinearGradient(0, 0, 0, sH);
-    skyGradient.addColorStop(0,   '#04061a');
-    skyGradient.addColorStop(0.5, '#05071e');
-    skyGradient.addColorStop(1,   '#080b26');
-  }
-  sCtx.fillStyle = skyGradient;
-  sCtx.fillRect(0, 0, sW, sH);
+  /* Sky background comes from bg.jpg — canvas only draws stars over it */
+  sCtx.clearRect(0, 0, sW, sH);
 
   /* Stars — only update twinkle every 3 frames */
   stars.forEach(s => {

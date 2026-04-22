@@ -24,7 +24,7 @@ function buildMusic() {
   /* Master — slow fade in over 6s so arrival feels gentle */
   const master = aCtx.createGain();
   master.gain.setValueAtTime(0, aCtx.currentTime);
-  master.gain.linearRampToValueAtTime(0.55, aCtx.currentTime + 6);
+  master.gain.linearRampToValueAtTime(0.38, aCtx.currentTime + 8);
   master.connect(aCtx.destination);
   mNodes.push(master);
 
@@ -49,7 +49,7 @@ function buildMusic() {
   const reverb = aCtx.createConvolver();
   reverb.buffer = revBuf;
   const wetGain = aCtx.createGain();
-  wetGain.gain.value = 0.68;
+  wetGain.gain.value = 0.60;
   reverb.connect(wetGain);
   wetGain.connect(limiter);
 
@@ -111,20 +111,20 @@ function buildMusic() {
 
   /* D minor pentatonic — sparse, emotional, spacious */
   const sequence = [
-    { f: 587.33, v: 0.13, d: 5.5 }, null, null,
-    { f: 440.00, v: 0.11, d: 6.0 }, null,
-    { f: 349.23, v: 0.12, d: 7.0 }, null, null, null,
-    { f: 293.66, v: 0.14, d: 6.5 }, null,
-    { f: 261.63, v: 0.11, d: 5.0 },
-    { f: 349.23, v: 0.13, d: 8.0 }, null, null,
-    { f: [293.66, 440.00], v: 0.10, d: 7.5 }, null, null, null,
-    { f: 523.25, v: 0.12, d: 5.0 }, null,
-    { f: 440.00, v: 0.11, d: 5.5 }, null,
-    { f: 349.23, v: 0.12, d: 6.0 }, null,
-    { f: 220.00, v: 0.14, d: 9.0 }, null, null, null, null,
-    { f: 698.46, v: 0.08, d: 4.5 }, null, null,
-    { f: 293.66, v: 0.13, d: 6.0 }, null,
-    { f: [220.00, 349.23], v: 0.09, d: 8.0 }, null, null, null, null, null,
+    { f: 587.33, v: 0.10, d: 5.5 }, null, null,
+    { f: 440.00, v: 0.08, d: 6.0 }, null,
+    { f: 349.23, v: 0.09, d: 7.0 }, null, null, null,
+    { f: 293.66, v: 0.11, d: 6.5 }, null,
+    { f: 261.63, v: 0.08, d: 5.0 },
+    { f: 349.23, v: 0.07, d: 8.0 }, null, null,
+    { f: [293.66, 440.00], v: 0.07, d: 7.5 }, null, null, null,
+    { f: 523.25, v: 0.09, d: 5.0 }, null,
+    { f: 440.00, v: 0.08, d: 5.5 }, null,
+    { f: 349.23, v: 0.09, d: 6.0 }, null,
+    { f: 220.00, v: 0.10, d: 9.0 }, null, null, null, null,
+    { f: 698.46, v: 0.06, d: 4.5 }, null, null,
+    { f: 293.66, v: 0.09, d: 6.0 }, null,
+    { f: [220.00, 349.23], v: 0.07, d: 8.0 }, null, null, null, null, null,
   ];
 
   let seqIdx = 0;
@@ -177,7 +177,7 @@ function buildMusic() {
   lfo.connect(lfoG);
 
   const oVol = aCtx.createGain();
-  oVol.gain.value = 0.17;
+  oVol.gain.value = 0.12;
   lfoG.connect(oVol.gain);
 
   ocean.connect(oHp); oHp.connect(oLp); oLp.connect(oVol); oVol.connect(limiter);
@@ -199,7 +199,7 @@ function buildMusic() {
     clp.type = 'lowpass'; clp.frequency.value = 400;
     const cg = aCtx.createGain();
     cg.gain.setValueAtTime(0, now);
-    cg.gain.linearRampToValueAtTime(0.18, now + 0.6);
+    cg.gain.linearRampToValueAtTime(0.12, now + 0.8);
     cg.gain.linearRampToValueAtTime(0, now + 3.0);
     crash.connect(clp); clp.connect(cg); cg.connect(limiter);
     crash.start(now); mNodes.push(crash);

@@ -39,27 +39,30 @@ canvas#sky {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;  /* sits over scene-bg, under ocean/moon/vignette */
+  opacity: 0.55; /* let bg image show through — stars overlay gently */
+  mix-blend-mode: screen;
 }
 
 /* ── Vignette — centers visual attention ───────────── */
 .vignette {
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 70% 70% at 50% 48%,
-    transparent 30%,
-    rgba(4, 5, 18, 0.55) 80%,
-    rgba(3, 4, 14, 0.82) 100%
+    ellipse 58% 62% at 50% 44%,
+    transparent 18%,
+    rgba(4, 5, 18, 0.30) 55%,
+    rgba(3, 4, 14, 0.65) 82%,
+    rgba(2, 3, 12, 0.88) 100%
   );
 }
 
 /* ── Main content wrapper ───────────────────────────── */
 main {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -76,16 +79,251 @@ main {
   padding: 56px 0 72px;
 }
 
-/* ── Moon ───────────────────────────────────────────── */
-.moon-orb {
-  width: 72px;
-  height: 72px;
+/* ── Scene background — reference image ─────────────── */
+#scene-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url('bg.jpg');
+  background-size: cover;
+  background-position: center 15%;
+  background-repeat: no-repeat;
+  filter: brightness(0.60) saturate(1.20) hue-rotate(-6deg);
+}
+
+/* ── Ocean layer ─────────────────────────────────────── */
+#ocean-layer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Dark base — deepens the ocean tone */
+#ocean-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 15, 40, 0.00) 0%,
+    rgba(5, 15, 40, 0.30) 40%,
+    rgba(3, 10, 28, 0.55) 100%
+  );
+}
+
+/* Subtle blue shimmer — CSS only, no JS */
+#ocean-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(30, 70, 140, 0.00) 0%,
+    rgba(40, 80, 160, 0.07) 25%,
+    rgba(50, 95, 175, 0.12) 50%,
+    rgba(35, 75, 148, 0.08) 75%,
+    rgba(15, 45, 100, 0.04) 100%
+  );
+  animation: oceanbreath 12s ease-in-out infinite;
+}
+
+@keyframes oceanbreath {
+  0%, 100% { opacity: 0.50; transform: translateY(0px); }
+  50%       { opacity: 1.00; transform: translateY(-3px); }
+}
+
+/* Moonpath reflection — centered, tapers from narrow top to wide bottom */
+#moonpath-glow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(220, 238, 255, 0.00) 0%,
+    rgba(220, 238, 255, 0.03) 15%,
+    rgba(225, 240, 255, 0.08) 35%,
+    rgba(230, 243, 255, 0.14) 55%,
+    rgba(225, 240, 255, 0.10) 75%,
+    rgba(215, 232, 255, 0.05) 92%,
+    rgba(210, 228, 255, 0.02) 100%
+  );
+  /* Narrow at horizon, wider toward camera — matches reference photo */
+  clip-path: polygon(44% 0%, 56% 0%, 100% 100%, 0% 100%);
+  animation: moonpathpulse 9s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes moonpathpulse {
+  0%, 100% { opacity: 0.65; transform: translateX(-50%) scaleX(1.00); }
+  50%       { opacity: 1.00; transform: translateX(-50%) scaleX(1.08); }
+}
+
+/* Horizon haze — soft luminous band where sky meets water */
+#ocean-layer::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(
+    180deg,
+    rgba(100, 160, 220, 0.00) 0%,
+    rgba(120, 175, 230, 0.08) 40%,
+    rgba(140, 190, 235, 0.12) 60%,
+    rgba(120, 175, 230, 0.06) 80%,
+    transparent 100%
+  );
+  animation: horizonglow 10s ease-in-out 2s infinite;
+}
+
+@keyframes horizonglow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1.0; }
+}
+
+/* ── Moon scene — CSS-rendered cinematic moon ────────── */
+#moon-scene {
+  position: fixed;
+  /* Centre horizontally, upper area vertically */
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58%;
+  z-index: 1;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Outer atmospheric bloom — wider, matches reference moon's glow */
+#moon-halo-outer {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(280px, 42vw, 520px);
+  height: clamp(280px, 42vw, 520px);
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, #faf5e0, #e8d98a 60%, #c8b76a);
+  background: radial-gradient(
+    circle,
+    rgba(190, 215, 255, 0.08) 0%,
+    rgba(165, 195, 248, 0.04) 40%,
+    rgba(140, 175, 240, 0.015) 65%,
+    transparent 80%
+  );
+  animation: moonaura 13s ease-in-out infinite;
+}
+
+/* Inner glow ring — tighter, brighter */
+#moon-halo-inner {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(160px, 22vw, 280px);
+  height: clamp(160px, 22vw, 280px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(220, 235, 255, 0.18) 0%,
+    rgba(200, 220, 255, 0.09) 40%,
+    rgba(180, 205, 252, 0.03) 68%,
+    transparent 80%
+  );
+  animation: moonaura 13s ease-in-out 1.8s infinite;
+}
+
+@keyframes moonaura {
+  0%, 100% { opacity: 0.65; transform: translateX(-50%) scale(1.00); }
+  50%       { opacity: 1.00; transform: translateX(-50%) scale(1.05); }
+}
+
+/* Moon body — cinematic, matches reference: large, luminous, natural texture */
+#moon-body {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(90px, 12vw, 160px);
+  height: clamp(90px, 12vw, 160px);
+  border-radius: 50%;
+  /* Reference moon: very bright silvery-white core, subtle blue-grey edge */
+  background:
+    radial-gradient(circle at 44% 40%,
+      #ffffff      0%,
+      #f0f4ff     12%,
+      #dce6ff     28%,
+      #baced8     48%,
+      #92aac5     68%,
+      #6e8fb8     85%,
+      #5578a8    100%
+    );
   box-shadow:
-    0 0 36px rgba(232,217,138,0.26),
-    0 0 80px rgba(232,217,138,0.10),
-    0 0 140px rgba(232,217,138,0.05);
+    0 0 0 2px rgba(255,255,255,0.12),
+    /* Sharp inner glow */
+    0 0 14px  rgba(210, 230, 255, 0.65),
+    /* Mid bloom */
+    0 0 38px  rgba(190, 215, 255, 0.38),
+    /* Soft outer halo */
+    0 0 80px  rgba(170, 200, 250, 0.20),
+    /* Atmospheric scatter */
+    0 0 160px rgba(150, 185, 240, 0.10),
+    0 0 280px rgba(130, 170, 230, 0.05);
+}
+
+/* Crater / surface texture — makes it feel like a real moon */
+#moon-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    /* Large mare region — dark patch upper-left */
+    radial-gradient(ellipse 32% 24% at 38% 40%, rgba(60,80,130,0.22) 0%, transparent 100%),
+    /* Smaller crater clusters */
+    radial-gradient(circle at 62% 48%, rgba(80,100,155,0.16) 0%, transparent 16%),
+    radial-gradient(circle at 30% 62%, rgba(70,90,145,0.12) 0%, transparent 12%),
+    radial-gradient(circle at 70% 28%, rgba(75,95,150,0.10) 0%, transparent 10%),
+    radial-gradient(circle at 52% 72%, rgba(65,85,140,0.09) 0%, transparent 9%),
+    radial-gradient(circle at 22% 38%, rgba(60,80,135,0.08) 0%, transparent 13%);
+}
+
+/* Limb darkening — edges darker, sphere illusion */
+#moon-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 48%,
+    rgba(25, 42, 90, 0.18) 72%,
+    rgba(15, 28, 70, 0.42) 92%,
+    rgba(8,  18, 55, 0.58) 100%
+  );
+}
+
+/* ── Moon orb (kept for other screens if needed) ────── */
+.moon-orb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%,
+    #ffffff 0%, #e8f0ff 20%, #c8d8f8 45%, #a0b8e0 70%, #7890c0 100%
+  );
+  box-shadow:
+    0 0 18px rgba(200,220,255,0.45),
+    0 0 40px rgba(180,205,255,0.22),
+    0 0 80px rgba(160,190,245,0.10);
   margin-bottom: 18px;
   flex-shrink: 0;
 }
@@ -99,14 +337,7 @@ main {
   margin-bottom: 6px;
 }
 
-.tagline {
-  color: #6a6450;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  margin-bottom: 38px;
-  text-align: center;
-  line-height: 1.75;
-}
+.tagline { display: none; }
 
 /* ── Screens ────────────────────────────────────────── */
 .screen {
@@ -517,7 +748,7 @@ textarea:focus {
   position: fixed;
   top: 18px;
   right: 20px;
-  z-index: 10;
+  z-index: 20;
   background: rgba(255,255,255,0.025);
   border: 0.5px solid rgba(232,217,138,0.14);
   border-radius: 20px;
@@ -557,19 +788,18 @@ textarea:focus {
 @media (min-width: 768px) {
   /* Widen content column — desktop has space, use it */
   .z {
-    max-width: 720px;
-    padding: 60px 48px 80px;
+    max-width: 780px;
+    padding: 52px 32px 80px;
   }
 
   main {
-    padding: 0 40px;
+    padding: 0 32px;
   }
 
-  .moon-orb {
-    width: 88px;
-    height: 88px;
-    margin-bottom: 22px;
-  }
+  /* Moon is now part of the fixed scene layer, not in content flow */
+  #moon-body     { width: clamp(100px, 13vw, 160px); height: clamp(100px, 13vw, 160px); }
+  #moon-halo-inner { width: clamp(180px, 24vw, 280px); height: clamp(180px, 24vw, 280px); }
+  #moon-halo-outer { width: clamp(280px, 40vw, 480px); height: clamp(280px, 40vw, 480px); }
 
   .site-name {
     font-size: 12px;
@@ -645,10 +875,7 @@ textarea:focus {
     padding: 0 48px;
   }
 
-  .moon-orb {
-    width: 96px;
-    height: 96px;
-  }
+  #moon-body { width: clamp(120px, 14vw, 180px); height: clamp(120px, 14vw, 180px); }
 
   .home-quiet   { font-size: 20px; }
   .home-carry   { font-size: 14px; }

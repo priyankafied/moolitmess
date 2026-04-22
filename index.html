@@ -12,6 +12,23 @@
 <body>
   <div id="app">
     <canvas id="sky" aria-hidden="true"></canvas>
+
+    <!-- Scene background — full reference image -->
+    <div id="scene-bg" aria-hidden="true"></div>
+
+    <!-- Ocean layer — sits over bottom half, CSS shimmer only -->
+    <div id="ocean-layer" aria-hidden="true">
+      <div id="ocean-shimmer" aria-hidden="true"></div>
+      <div id="moonpath-glow" aria-hidden="true"></div>
+    </div>
+
+    <!-- Moon overlay — CSS-rendered, matches reference -->
+    <div id="moon-scene" aria-hidden="true">
+      <div id="moon-halo-outer"></div>
+      <div id="moon-halo-inner"></div>
+      <div id="moon-body"></div>
+    </div>
+
     <div class="vignette" aria-hidden="true"></div>
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="Toggle ambient music">&#9834; music</button>
 
@@ -19,9 +36,7 @@
       <h1 class="sr-only">Moonlit Mess — a quiet space to release what you carry</h1>
 
       <div class="z">
-        <div class="moon-orb" aria-hidden="true"></div>
         <div class="site-name" aria-hidden="true">Moonlit Mess</div>
-        <p class="tagline">a quiet place that holds what you carry<br>and asks nothing in return</p>
 
         <!-- HOME -->
         <div class="screen" id="s0" role="region" aria-label="Home">
