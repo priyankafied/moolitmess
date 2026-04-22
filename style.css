@@ -1,22 +1,43 @@
+/* RESET */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* 🌌 NIGHT BACKGROUND */
 body {
-  background: #06081a;
+  background: radial-gradient(
+      circle at 50% 30%,
+      rgba(20, 26, 60, 0.35),
+      rgba(6, 8, 26, 1) 60%
+    ),
+    #06081a;
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
 }
 
+/* 🎬 VIGNETTE */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(0,0,0,0) 50%,
+    rgba(0,0,0,0.45) 100%
+  );
+}
+
+/* MAIN APP */
 #app {
   min-height: 100vh;
   width: 100%;
   max-width: 680px;
-  background: #06081a;
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,14 +45,21 @@ body {
   position: relative;
   overflow: hidden;
   font-family: Georgia, 'Times New Roman', serif;
+
+  /* subtle glow */
+  box-shadow:
+    0 0 80px rgba(232,217,138,0.04),
+    0 0 140px rgba(120,140,255,0.03);
 }
 
+/* SKY CANVAS */
 canvas#sky {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
+/* CONTENT WRAPPER */
 .z {
   position: relative;
   z-index: 2;
@@ -42,12 +70,16 @@ canvas#sky {
   max-width: 440px;
 }
 
+/* 🌕 MOON */
 .moon-orb {
   width: 64px;
   height: 64px;
   border-radius: 50%;
   background: radial-gradient(circle at 38% 32%, #faf5e0, #e8d98a 60%, #c8b76a);
-  box-shadow: 0 0 32px rgba(232,217,138,0.22), 0 0 70px rgba(232,217,138,0.08);
+  box-shadow:
+    0 0 40px rgba(232,217,138,0.25),
+    0 0 100px rgba(232,217,138,0.12),
+    0 0 180px rgba(120,140,255,0.05);
   margin-bottom: 16px;
   flex-shrink: 0;
 }
@@ -311,8 +343,57 @@ textarea:focus {
   to   { opacity: 1; }
 }
 
+/* 📱 MOBILE */
 @media (max-width: 480px) {
   #app { padding: 36px 18px 48px; }
   .btn-row { flex-direction: column; align-items: center; }
   .btn-moon { width: 200px; text-align: center; }
+}
+
+/* 🖥 DESKTOP NIGHT SPACE */
+@media (min-width: 1024px) {
+
+  body {
+    align-items: center;
+  }
+
+  #app {
+    max-width: 100%;
+    padding: 80px 20px;
+  }
+
+  .z {
+    max-width: 720px;
+  }
+
+  .hero-text {
+    font-size: 18px;
+    line-height: 1.8;
+    max-width: 600px;
+  }
+
+  .inter-msg,
+  .closure-text {
+    max-width: 560px;
+    font-size: 16px;
+  }
+
+  textarea {
+    max-width: 600px;
+    font-size: 16px;
+  }
+
+  .light-msg-box {
+    max-width: 600px;
+    font-size: 16px;
+  }
+
+  .btn-row {
+    gap: 18px;
+  }
+
+  .btn-moon {
+    font-size: 15px;
+    padding: 12px 32px;
+  }
 }
