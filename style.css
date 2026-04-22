@@ -133,26 +133,73 @@ main {
 }
 
 /* ── Home hero text ─────────────────────────────────── */
-.hero-statement {
-  color: #a89e7a;
-  font-size: 17px;
+/* ── Home screen copy ───────────────────────────────── */
+.home-line1 {
+  color: #9a9278;
+  font-size: 15px;
   text-align: center;
-  line-height: 2.3;
-  margin-bottom: 10px;
-  max-width: 320px;
+  line-height: 1;
+  margin-bottom: 18px;
   font-style: italic;
-  text-shadow: 0 0 28px rgba(180,165,100,0.10);
+  letter-spacing: 0.02em;
 }
 
-.hero-privacy {
-  color: #524c3c;
-  font-size: 11px;
+.home-line2 {
+  color: #6a6252;
+  font-size: 13px;
   text-align: center;
-  line-height: 2.1;
-  margin-bottom: 48px;
-  max-width: 260px;
+  line-height: 1;
+  margin-bottom: 52px;
+  letter-spacing: 0.03em;
+}
+
+/* ── Home action buttons ────────────────────────────── */
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-primary-action {
+  background: transparent;
+  border: 0.5px solid rgba(232,217,138,0.28);
+  border-radius: 40px;
+  color: #d8cc90;
+  font-family: Georgia, serif;
+  font-size: 17px;
   letter-spacing: 0.04em;
-  opacity: 0.85;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: background 0.35s, border-color 0.35s, box-shadow 0.35s;
+  box-shadow: inset 0 1px 0 rgba(255,248,200,0.04);
+}
+
+.btn-primary-action:hover,
+.btn-primary-action:focus-visible {
+  background: rgba(232,217,138,0.07);
+  border-color: rgba(232,217,138,0.55);
+  box-shadow: 0 0 22px rgba(232,217,138,0.09), inset 0 1px 0 rgba(255,248,200,0.06);
+  outline: none;
+}
+
+.btn-secondary-action {
+  background: transparent;
+  border: none;
+  color: #4e4a3a;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  font-style: italic;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.btn-secondary-action:hover,
+.btn-secondary-action:focus-visible {
+  color: #8a8268;
+  outline: none;
 }
 
 /* ── Button layout ──────────────────────────────────── */
@@ -467,14 +514,22 @@ textarea:focus {
     margin-bottom: 44px;
   }
 
-  .hero-statement {
-    font-size: 19px;
-    max-width: 380px;
+  .home-line1 {
+    font-size: 16px;
   }
 
-  .hero-privacy {
-    font-size: 11px;
-    margin-bottom: 52px;
+  .home-line2 {
+    font-size: 14px;
+    margin-bottom: 60px;
+  }
+
+  .btn-primary-action {
+    font-size: 18px;
+    padding: 15px 48px;
+  }
+
+  .btn-secondary-action {
+    font-size: 13px;
   }
 
   .btn-moon {
