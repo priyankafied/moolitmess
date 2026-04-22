@@ -15,38 +15,23 @@
     <div class="vignette" aria-hidden="true"></div>
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="Toggle ambient music">&#9834; music</button>
 
-   <main>
-  <h1 class="sr-only">leave it under the moon</h1>
+    <main>
+      <h1 class="sr-only">Moonlit Mess — a quiet space to release what you carry</h1>
 
-  <div class="z">
-    <div class="moon-orb" aria-hidden="true"></div>
+      <div class="z">
+        <div class="moon-orb" aria-hidden="true"></div>
+        <div class="site-name" aria-hidden="true">Moonlit Mess</div>
+        <p class="tagline">a quiet place that holds what you carry<br>and asks nothing in return</p>
 
-    <!-- Identity (soft brand, not loud title) -->
-    <div class="site-name" aria-hidden="true">leave it under the moon</div>
-
-
-    <!-- HOME -->
-    <div class="screen" id="s0" role="region" aria-label="Home">
-      <div class="home-copy">
-
-        <p class="home-quiet">it’s quiet here</p>
-
-        <p class="home-carry">you can leave what you’re carrying</p>
-
-        <!-- Primary action (keep only one emotional direction) -->
-        <button class="home-primary" onclick="goTo('s-gate')" id="btn-leave-it">
-          write it. leave it.
-        </button>
-
-        <!-- Secondary action (soft, not competing) -->
-        <button class="home-secondary" onclick="goTo('s-find')" id="btn-find-light">
-          find your light in the dark
-        </button>
-
-      </div>
-    </div>
-  </div>
-</main>
+        <!-- HOME -->
+        <div class="screen" id="s0" role="region" aria-label="Home">
+          <div class="home-copy">
+            <p class="home-quiet">it's quiet here</p>
+            <p class="home-carry">you can leave what you're carrying</p>
+            <button class="home-primary" onclick="goTo('s-gate')" id="btn-leave-it">write it. leave it.</button>
+            <button class="home-secondary" onclick="goTo('s-find')" id="btn-find-light">find your light in the dark</button>
+          </div>
+        </div>
 
         <!-- GATE -->
         <div class="screen hidden" id="s-gate" role="region" aria-label="Before you write">
@@ -99,21 +84,11 @@
           </div>
         </div>
 
-   <!-- STAY -->
-<div class="screen hidden" id="s-stay" role="region" aria-label="Holding gently">
-  <p class="stay-msg slow-in" tabindex="-1">
-    you don’t have to fix this right now.<br>
-    just stay here a little longer.
-  </p>
-
-  <div class="btn-row">
-    <button class="btn-moon ghost" onclick="goTo('s0')">go gently</button>
-
-    <button class="btn-moon" type="button" onclick="return false;">
-      just sit with it
-    </button>
-  </div>
-</div>
+        <!-- STAY -->
+        <div class="screen hidden" id="s-stay" role="region" aria-label="Holding gently">
+          <p class="stay-msg slow-in" tabindex="-1">That's okay.<br>You don't have to release all of it now.<br>Come back when you're ready.</p>
+          <button class="btn-moon" onclick="goTo('s0')">go gently</button>
+        </div>
 
         <!-- LEAVE A LIGHT -->
         <div class="screen hidden" id="s-leave-light" role="region" aria-label="Leave a light for someone">
