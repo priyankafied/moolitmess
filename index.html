@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Moonlit Mess</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Performance: pre-open connections used by the page -->
+  <link rel="preconnect" href="https://api.anthropic.com" />
+  <meta name="theme-color" content="#06081a" />
 </head>
 <body>
   <div id="app">
@@ -22,21 +25,11 @@
 
         <!-- HOME -->
         <div class="screen" id="s0" role="region" aria-label="Home">
-          <p class="hero-text">
-            What you write here is never stored or seen by anyone.<br>
-            If you choose to leave a message for a stranger,<br>
-            that part is shared — anonymously and gently.<br>
-            <em>Nothing here can ever be traced back to you.</em>
-          </p>
-          <div class="btn-row">
-            <div class="btn-wrap">
-              <button class="btn-moon" onclick="goTo('s-gate')" id="btn-leave-it">leave it</button>
-              <span class="btn-hint">write and release a thought</span>
-            </div>
-            <div class="btn-wrap">
-              <button class="btn-moon ghost" onclick="goTo('s-find')" id="btn-find-light">find a light</button>
-              <span class="btn-hint">read something someone left</span>
-            </div>
+          <div class="home-copy">
+            <p class="home-quiet">it's quiet here</p>
+            <p class="home-carry">you can leave what you're carrying</p>
+            <button class="home-primary" onclick="goTo('s-gate')" id="btn-leave-it">write it. leave it.</button>
+            <button class="home-secondary" onclick="goTo('s-find')" id="btn-find-light">find your light in the dark</button>
           </div>
         </div>
 

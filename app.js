@@ -148,24 +148,28 @@ async function doReflect() {
   bEl.style.opacity = 0;
 
   const preview = txt.length > 160 ? txt.slice(0, 160) + '…' : txt;
-  await typeText(tEl, preview, 38);
-  await sleep(700);
 
+  /* Start API fetch immediately — runs in parallel while text types */
   let q = reflectQs[Math.floor(Math.random() * reflectQs.length)];
-  try {
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system: "You are a quiet, gentle presence. Someone shares something heavy. Ask ONE soft, somatic question under 18 words. Poetic, not clinical. Help them feel, not fix. No preamble. Just the question.",
-        messages: [{ role: "user", content: txt }]
-      })
-    });
-    const d = await r.json();
+  const fetchQ = fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 80,
+      system: "You are a quiet, gentle presence. Someone shares something heavy. Ask ONE soft, somatic question under 18 words. Poetic, not clinical. Help them feel, not fix. No preamble. Just the question.",
+      messages: [{ role: "user", content: txt }]
+    })
+  }).then(r => r.json()).then(d => {
     if (d.content?.[0]?.text) q = d.content[0].text.replace(/^["']+|["']+$/g, '').trim();
-  } catch (e) {}
+  }).catch(() => {});
+
+  /* Type the user's thought while fetch runs in background */
+  await typeText(tEl, preview, 38);
+  await sleep(600);
+
+  /* Wait for fetch to finish (usually already done by now) */
+  await fetchQ;
 
   await typeText(qEl, q, 42);
   await sleep(500);
