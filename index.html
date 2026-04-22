@@ -4,132 +4,120 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Moonlit Mess</title>
+
   <link rel="stylesheet" href="style.css" />
-  <!-- Performance: pre-open connections used by the page -->
-  <link rel="preconnect" href="https://api.anthropic.com" />
+
   <meta name="theme-color" content="#06081a" />
 </head>
+
 <body>
+
   <div id="app">
+
+    <!-- SKY CANVAS -->
     <canvas id="sky" aria-hidden="true"></canvas>
+
+    <!-- ✨ STAR LAYER -->
+    <div class="stars" aria-hidden="true"></div>
+
+    <!-- 🌊 WATER REFLECTION -->
+    <div class="water-reflection" aria-hidden="true"></div>
+
     <div class="vignette" aria-hidden="true"></div>
-    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="Toggle ambient music">&#9834; music</button>
+
+    <!-- MUSIC -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="Toggle ambient music">
+      ♫ music
+    </button>
 
     <main>
-      <h1 class="sr-only">Moonlit Mess — a quiet space to release what you carry</h1>
+      <h1 class="sr-only">Moonlit Mess</h1>
 
-    <div class="z">
-  <div class="moon-orb" aria-hidden="true"></div>
-  <div class="site-name" aria-hidden="true">Moonlit Mess</div>
+      <div class="z">
 
-  <!-- HOME -->
-  <div class="screen" id="s0" role="region" aria-label="Home">
-    <div class="home-copy">
-      <p class="home-quiet">it's quiet here</p>
-      <p class="home-carry">you can leave what you're carrying</p>
+        <div class="moon-orb" aria-hidden="true"></div>
+        <div class="site-name" aria-hidden="true">Moonlit Mess</div>
 
-      <button class="home-primary" onclick="goTo('s-gate')" id="btn-leave-it">
-        write it. leave it.
-      </button>
+        <!-- HOME -->
+        <div class="screen" id="s0">
 
-      <button class="home-secondary" onclick="goTo('s-find')" id="btn-find-light">
-        find your light in the dark
-      </button>
-    </div>
-  </div>
-</div>
+          <div class="home-copy">
+            <p class="home-quiet">it's quiet here</p>
+            <p class="home-carry">you can leave what you're carrying</p>
+
+            <button class="home-primary" onclick="goTo('s-gate')">
+              write it. leave it.
+            </button>
+
+            <button class="home-secondary" onclick="goTo('s-find')">
+              find your light in the dark
+            </button>
+          </div>
+
+        </div>
+
         <!-- GATE -->
-        <div class="screen hidden" id="s-gate" role="region" aria-label="Before you write">
-          <p class="inter-msg slow-in" style="margin-top:10px;" tabindex="-1">Some thoughts need a place to go.<br>Leave yours here.</p>
-          <div class="btn-row slow-in" style="margin-top:4px;">
+        <div class="screen hidden" id="s-gate">
+          <p class="inter-msg">Some thoughts need a place to go.<br>Leave yours here.</p>
+          <div class="btn-row">
             <button class="btn-moon ghost" onclick="goTo('s0')">go back</button>
             <button class="btn-moon" onclick="goTo('s-write')">continue</button>
           </div>
         </div>
 
         <!-- WRITE -->
-        <div class="screen hidden" id="s-write" role="region" aria-label="Write your thought">
-          <p class="inter-msg slow-in" id="write-prompt" style="margin-bottom:18px;" tabindex="-1"></p>
-          <label for="thought-input" class="sr-only">Your private thought — not stored, not seen by anyone</label>
-          <textarea id="thought-input" placeholder="write freely. no one will see this." rows="5"></textarea>
-          <p class="privacy-note">What you write here stays in your browser for this session only.</p>
-          <div class="btn-row" style="margin-top:16px;">
+        <div class="screen hidden" id="s-write">
+          <p class="inter-msg">Write freely. No one will see this.</p>
+
+          <textarea id="thought-input" placeholder="write freely..."></textarea>
+
+          <div class="btn-row">
             <button class="btn-moon ghost" onclick="goTo('s-gate')">go back</button>
-            <button class="btn-moon" id="btn-continue" onclick="doReflect()">continue</button>
+            <button class="btn-moon" onclick="goTo('s-reflect')">continue</button>
           </div>
         </div>
 
         <!-- REFLECT -->
-        <div class="screen hidden" id="s-reflect" role="region" aria-label="Reflect">
+        <div class="screen hidden" id="s-reflect">
           <div class="reflect-wrap">
-            <div class="typed-thought" id="typed-thought" aria-live="polite"></div>
-            <div class="reflect-q" id="reflect-q" aria-live="polite"></div>
-            <label for="reflect-response" class="sr-only">Your response — just for you</label>
-            <textarea id="reflect-response" placeholder="write your answer here, just for you..." rows="4"></textarea>
-            <div class="btn-row" id="reflect-btns">
-              <button class="btn-moon ghost" onclick="doStay()">let it stay</button>
-              <button class="btn-moon" onclick="doLetGo()">let it go</button>
+            <div class="typed-thought"></div>
+            <div class="reflect-q">What are you holding onto?</div>
+
+            <textarea id="reflect-response"></textarea>
+
+            <div class="btn-row">
+              <button class="btn-moon ghost" onclick="goTo('s-stay')">let it stay</button>
+              <button class="btn-moon" onclick="goTo('s-lantern')">let it go</button>
             </div>
           </div>
         </div>
 
         <!-- LANTERN -->
-        <div class="screen hidden" id="s-lantern" role="region" aria-label="Releasing" aria-live="polite">
-          <div class="lantern-stage">
-            <canvas id="lc" height="340" aria-hidden="true"></canvas>
-          </div>
+        <div class="screen hidden" id="s-lantern">
+          <canvas id="lc"></canvas>
         </div>
 
-        <!-- CLOSURE -->
-        <div class="screen hidden" id="s-closure" role="region" aria-label="After release">
-          <p class="closure-text stillness" id="closure-line" tabindex="-1"></p>
-          <div class="btn-row stillness" id="closure-btns" style="opacity:0;">
-            <button class="btn-moon ghost" onclick="goTo('s0')">return</button>
-            <button class="btn-moon" onclick="goTo('s-leave-light')">leave a light</button>
-          </div>
-        </div>
+        <!-- FIND -->
+        <div class="screen hidden" id="s-find">
+          <div class="light-sub">someone left this for you</div>
+          <div class="light-msg-box">you are still becoming</div>
 
-        <!-- STAY -->
-        <div class="screen hidden" id="s-stay" role="region" aria-label="Holding gently">
-          <p class="stay-msg slow-in" tabindex="-1">That's okay.<br>You don't have to release all of it now.<br>Come back when you're ready.</p>
-          <button class="btn-moon" onclick="goTo('s0')">go gently</button>
-        </div>
-
-        <!-- LEAVE A LIGHT -->
-        <div class="screen hidden" id="s-leave-light" role="region" aria-label="Leave a light for someone">
-          <p class="inter-msg slow-in" style="margin-bottom:18px;" tabindex="-1">Leave a small, human thought<br>for a stranger to find tonight.</p>
-          <label for="light-input" class="sr-only">A gentle anonymous message for a stranger</label>
-          <textarea id="light-input" placeholder="not advice, not wisdom — just something true..."></textarea>
-          <p class="privacy-note shared-note">This is the only part that is shared — anonymously, with no trace of you.</p>
-          <div class="btn-row" style="margin-top:16px;">
-            <button class="btn-moon ghost" onclick="goTo('s-closure')">go back</button>
-            <button class="btn-moon" id="btn-leave-light" onclick="doLeaveLight()">send it into the night</button>
-          </div>
-        </div>
-
-        <!-- LIGHT SENT -->
-        <div class="screen hidden" id="s-light-sent" role="region" aria-label="Light sent">
-          <p class="inter-msg slow-in" style="color:#8a9878;" tabindex="-1">Someone will find this.<br>Thank you for leaving something soft behind.</p>
-          <button class="btn-moon" style="margin-top:8px;" onclick="goTo('s0')">return</button>
-        </div>
-
-        <!-- FIND A LIGHT -->
-        <div class="screen hidden" id="s-find" role="region" aria-label="A light left for you">
-          <div class="light-sub" style="margin-top:8px;">someone left this for you</div>
-          <div class="light-msg-box" id="light-box" aria-live="polite" tabindex="-1"></div>
           <div class="btn-row">
             <button class="btn-moon ghost" onclick="goTo('s0')">go back</button>
-            <button class="btn-moon" onclick="nextLight()">leave a light for someone to find</button>
+            <button class="btn-moon" onclick="nextLight()">next</button>
           </div>
         </div>
 
       </div>
     </main>
+
   </div>
 
+  <!-- SCRIPTS -->
   <script src="sky.js"></script>
   <script src="music.js"></script>
   <script src="lantern.js"></script>
   <script src="app.js"></script>
+
 </body>
 </html>
