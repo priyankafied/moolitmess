@@ -10,6 +10,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  overflow-x: hidden; /* prevents horizontal jank */
 }
 
 #app {
@@ -24,14 +25,21 @@ body {
   position: relative;
   overflow: hidden;
   font-family: Georgia, 'Times New Roman', serif;
+
+  /* FIX: improves rendering performance */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
+/* 🔥 FIX: canvas layering + performance safety */
 canvas#sky {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
 }
 
+/* UI always above canvas */
 .z {
   position: relative;
   z-index: 2;
@@ -40,6 +48,9 @@ canvas#sky {
   align-items: center;
   width: 100%;
   max-width: 440px;
+
+  /* performance boost */
+  transform: translateZ(0);
 }
 
 .moon-orb {
@@ -49,7 +60,6 @@ canvas#sky {
   background: radial-gradient(circle at 38% 32%, #faf5e0, #e8d98a 60%, #c8b76a);
   box-shadow: 0 0 32px rgba(232,217,138,0.22), 0 0 70px rgba(232,217,138,0.08);
   margin-bottom: 16px;
-  flex-shrink: 0;
 }
 
 .site-name {
@@ -111,12 +121,16 @@ canvas#sky {
   letter-spacing: 0.04em;
   padding: 11px 30px;
   cursor: pointer;
-  transition: background 0.25s, border-color 0.25s, color 0.25s;
+  transition: all 0.2s ease;
+
+  /* FIX: smoother click responsiveness */
+  will-change: transform;
 }
 
 .btn-moon:hover {
   background: rgba(232,217,138,0.07);
   border-color: rgba(232,217,138,0.6);
+  transform: translateY(-1px);
 }
 
 .btn-moon.ghost {
@@ -132,7 +146,7 @@ canvas#sky {
 
 .btn-moon:disabled {
   opacity: 0.28;
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .inter-msg {
@@ -158,6 +172,9 @@ textarea {
   resize: none;
   outline: none;
   min-height: 115px;
+
+  /* FIX: smoother typing performance */
+  will-change: border-color;
 }
 
 textarea::placeholder {
@@ -197,16 +214,12 @@ textarea:focus {
   min-height: 26px;
 }
 
-#reflect-response {
-  opacity: 0;
-  transition: opacity 1.4s ease;
-  margin-bottom: 18px;
-  min-height: 100px;
-}
-
+/* FIX: reduce layout recalculation issues */
+#reflect-response,
 #reflect-btns {
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transition: opacity 0.8s ease;
+  will-change: opacity;
 }
 
 .lantern-stage {
@@ -254,7 +267,6 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 1s ease;
 }
 
 .stay-msg {
@@ -281,29 +293,33 @@ textarea:focus {
   padding: 6px 13px;
   cursor: pointer;
   font-family: Georgia, serif;
-  transition: color 0.2s, border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .music-btn:hover {
   color: #e8d98a;
   border-color: rgba(232,217,138,0.32);
+  transform: scale(1.02);
 }
 
+/* animations optimized */
 .fade-in {
-  animation: fi 0.9s ease forwards;
+  animation: fi 0.7s ease-out forwards;
+  will-change: opacity, transform;
 }
 
 .slow-in {
-  animation: fi 1.5s ease forwards;
+  animation: fi 1.2s ease-out forwards;
+  will-change: opacity, transform;
 }
 
 @keyframes fi {
-  from { opacity: 0; transform: translateY(7px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .stillness {
-  animation: still 2s ease forwards;
+  animation: still 1.5s ease forwards;
 }
 
 @keyframes still {
@@ -311,6 +327,7 @@ textarea:focus {
   to   { opacity: 1; }
 }
 
+/* mobile optimization */
 @media (max-width: 480px) {
   #app { padding: 36px 18px 48px; }
   .btn-row { flex-direction: column; align-items: center; }
