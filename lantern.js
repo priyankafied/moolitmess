@@ -51,8 +51,8 @@ function runLantern() {
       c.fill();
     }
 
-    glowRings.forEach(ring => {
-      ring.opacity = Math.max(0, aura * (0.4 - glowRings.indexOf(ring) * 0.06) * Math.sin(t * 0.04 + ring.phase));
+    glowRings.forEach((ring, ri) => {
+      ring.opacity = Math.max(0, aura * (0.4 - ri * 0.06) * Math.sin(t * 0.04 + ring.phase));
       c.beginPath();
       c.arc(cx, lanternY, ring.r + t * 0.18, 0, Math.PI * 2);
       c.strokeStyle = `rgba(255,220,100,${ring.opacity})`;
