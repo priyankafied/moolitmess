@@ -84,8 +84,8 @@
           </div>
         </div>
 
-        <!-- STAY -->
-       <div class="screen hidden" id="s-stay" role="region" aria-label="Holding gently">
+   <!-- STAY -->
+<div class="screen hidden" id="s-stay" role="region" aria-label="Holding gently">
   <p class="stay-msg slow-in" tabindex="-1">
     you don’t have to fix this right now.<br>
     just stay here a little longer.
@@ -93,7 +93,10 @@
 
   <div class="btn-row">
     <button class="btn-moon ghost" onclick="goTo('s0')">go gently</button>
-    <button class="btn-moon" onclick="goTo('s-find')">just sit with it</button>
+
+    <button class="btn-moon" type="button" onclick="return false;">
+      just sit with it
+    </button>
   </div>
 </div>
 
