@@ -42,6 +42,36 @@ let userLights = [];
 let lightIdx = 0;
 let shuffled = [...pool].sort(() => Math.random() - 0.5);
 
+/* Focus management — moves keyboard focus to the right element after each transition */
+const focusTargets = {
+  's0':           () => document.getElementById('btn-leave-it'),
+  's-gate':       () => document.querySelector('#s-gate .inter-msg'),
+  's-write':      () => document.getElementById('thought-input'),
+  's-reflect':    () => document.getElementById('reflect-response'),
+  's-lantern':    () => null,
+  's-closure':    () => document.getElementById('closure-line'),
+  's-stay':       () => document.querySelector('#s-stay .stay-msg'),
+  's-leave-light':() => document.getElementById('light-input'),
+  's-light-sent': () => document.querySelector('#s-light-sent .inter-msg'),
+  's-find':       () => document.getElementById('light-box'),
+};
+
+function moveFocus(id) {
+  const getter = focusTargets[id];
+  if (!getter) return;
+  const el = getter();
+  if (!el) return;
+  /* Small delay so the DOM is visible before focus lands */
+  setTimeout(() => {
+    if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
+      el.focus();
+    } else {
+      if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+      el.focus({ preventScroll: false });
+    }
+  }, 120);
+}
+
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
   const el = document.getElementById(id);
@@ -69,6 +99,8 @@ function goTo(id) {
       br.style.opacity = 1;
     }, 1400);
   }
+
+  moveFocus(id);
 }
 
 function showLight() {
@@ -142,6 +174,9 @@ async function doReflect() {
   await sleep(1500);
   bEl.style.transition = 'opacity 1.2s ease';
   bEl.style.opacity = 1;
+
+  /* Move focus to the response textarea once it's visible */
+  setTimeout(() => { rEl.focus(); }, 200);
   document.getElementById('btn-continue').disabled = false;
 }
 
