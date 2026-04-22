@@ -21,6 +21,7 @@
       <div class="z">
         <div class="moon-orb" aria-hidden="true"></div>
         <div class="site-name" aria-hidden="true">Moonlit Mess</div>
+        <p class="tagline">a quiet place that holds what you carry<br>and asks nothing in return</p>
 
         <!-- HOME -->
         <div class="screen" id="s0" role="region" aria-label="Home">
@@ -85,8 +86,23 @@
 
         <!-- STAY -->
         <div class="screen hidden" id="s-stay" role="region" aria-label="Holding gently">
-          <p class="stay-msg slow-in" tabindex="-1">That's okay.<br>You don't have to release all of it now.<br>Come back when you're ready.</p>
-          <button class="btn-moon" onclick="goTo('s0')">go gently</button>
+          <div class="stay-card slow-in">
+            <div class="stay-orb" id="stay-orb" aria-hidden="true"></div>
+            <p class="stay-written" id="stay-written"></p>
+          </div>
+          <div class="btn-row stay-btns slow-in">
+            <button class="btn-moon ghost" onclick="doSitWithIt()">sit with it</button>
+            <button class="btn-moon ghost" onclick="goTo('s0')">go gently</button>
+            <button class="btn-moon" onclick="doLetGo()">let it go</button>
+          </div>
+        </div>
+
+        <!-- SIT WITH IT -->
+        <div class="screen hidden" id="s-sit" role="region" aria-label="Sitting with it">
+          <div class="sit-wrap">
+            <p class="sit-written" id="sit-written"></p>
+            <p class="sit-message" id="sit-message" aria-live="polite"></p>
+          </div>
         </div>
 
         <!-- LEAVE A LIGHT -->
@@ -113,7 +129,7 @@
           <div class="light-msg-box" id="light-box" aria-live="polite" tabindex="-1"></div>
           <div class="btn-row">
             <button class="btn-moon ghost" onclick="goTo('s0')">go back</button>
-            <button class="btn-moon" onclick="nextLight()">another</button>
+            <button class="btn-moon" onclick="goTo('s-leave-light')">leave a light for someone to find</button>
           </div>
         </div>
 

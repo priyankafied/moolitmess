@@ -50,7 +50,8 @@ const focusTargets = {
   's-reflect':    () => document.getElementById('reflect-response'),
   's-lantern':    () => null,
   's-closure':    () => document.getElementById('closure-line'),
-  's-stay':       () => document.querySelector('#s-stay .stay-msg'),
+  's-stay':       () => document.querySelector('#s-stay .stay-card'),
+  's-sit':        () => document.getElementById('sit-written'),
   's-leave-light':() => document.getElementById('light-input'),
   's-light-sent': () => document.querySelector('#s-light-sent .inter-msg'),
   's-find':       () => document.getElementById('light-box'),
@@ -131,9 +132,12 @@ function doLeaveLight() {
   goTo('s-light-sent');
 }
 
+let currentThought = '';   /* saved when user continues to reflect */
+
 async function doReflect() {
   const txt = document.getElementById('thought-input').value.trim();
   if (!txt) return;
+  currentThought = txt;
   document.getElementById('btn-continue').disabled = true;
   goTo('s-reflect');
 
@@ -190,7 +194,47 @@ function doLetGo() {
 }
 
 function doStay() {
+  /* Populate stay card with what the user wrote */
+  const written = document.getElementById('stay-written');
+  if (written && currentThought) {
+    const preview = currentThought.length > 200
+      ? currentThought.slice(0, 200) + '…'
+      : currentThought;
+    written.textContent = preview;
+  }
+  /* Shift orb hue slightly based on text length — subtle personalisation */
+  const orb = document.getElementById('stay-orb');
+  if (orb) {
+    const hue = (currentThought.length * 3) % 60;  /* 0–60 deg shift */
+    orb.style.background = `radial-gradient(circle at 38% 35%,
+      hsla(${240 + hue},60%,80%,0.55) 0%,
+      hsla(${240 + hue},50%,65%,0.28) 45%,
+      hsla(${240 + hue},40%,50%,0.08) 100%
+    )`;
+  }
   goTo('s-stay');
+}
+
+function doSitWithIt() {
+  /* Mirror the written text into sit screen */
+  const sitWritten = document.getElementById('sit-written');
+  if (sitWritten && currentThought) {
+    const preview = currentThought.length > 200
+      ? currentThought.slice(0, 200) + '…'
+      : currentThought;
+    sitWritten.textContent = preview;
+  }
+  /* Reset message state */
+  const sitMsg = document.getElementById('sit-message');
+  if (sitMsg) {
+    sitMsg.classList.remove('revealed');
+    sitMsg.textContent = 'Acknowledge and accept your feelings instead of avoiding, suppressing, or judging them.';
+  }
+  goTo('s-sit');
+  /* Reveal message slowly — 6 seconds of stillness first */
+  setTimeout(() => {
+    if (sitMsg) sitMsg.classList.add('revealed');
+  }, 6000);
 }
 
 function sleep(ms) {

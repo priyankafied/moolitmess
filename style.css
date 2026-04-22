@@ -407,6 +407,101 @@ textarea:focus {
 }
 
 /* ── Stay screen ────────────────────────────────────── */
+.stay-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(232,217,138,0.10);
+  border-radius: 20px;
+  padding: 36px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+/* Generative abstract orb — colour shifts based on text tone */
+.stay-orb {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%,
+    rgba(200,185,240,0.55) 0%,
+    rgba(160,140,220,0.30) 45%,
+    rgba(120,100,180,0.10) 100%
+  );
+  box-shadow:
+    0 0 28px rgba(180,160,220,0.18),
+    0 0 60px rgba(160,140,200,0.08);
+  animation: orbpulse 6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes orbpulse {
+  0%, 100% { transform: scale(1);   opacity: 0.75; }
+  50%       { transform: scale(1.07); opacity: 1; }
+}
+
+.stay-written {
+  color: rgba(210,200,170,0.60);
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.95;
+  max-width: 340px;
+  word-break: break-word;
+}
+
+.stay-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Sit with it screen ─────────────────────────────── */
+.sit-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  max-width: 400px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.sit-written {
+  color: rgba(205,195,162,0.45);
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+  line-height: 2;
+  word-break: break-word;
+  opacity: 0;
+  animation: stillfade 2s ease forwards;
+}
+
+.sit-message {
+  color: rgba(180,170,140,0.0);
+  font-size: 15px;
+  text-align: center;
+  line-height: 2.1;
+  font-style: italic;
+  max-width: 360px;
+  transition: color 4s ease;
+}
+
+.sit-message.revealed {
+  color: rgba(180,170,140,0.75);
+}
+
+@keyframes stillfade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Legacy stay-msg kept for any fallback */
 .stay-msg {
   color: #888068;
   font-size: 16px;
@@ -460,9 +555,14 @@ textarea:focus {
 
 /* ── Desktop scaling ────────────────────────────────── */
 @media (min-width: 768px) {
+  /* Widen content column — desktop has space, use it */
   .z {
-    max-width: 620px;
-    padding: 64px 0 80px;
+    max-width: 720px;
+    padding: 60px 48px 80px;
+  }
+
+  main {
+    padding: 0 40px;
   }
 
   .moon-orb {
@@ -481,9 +581,9 @@ textarea:focus {
     margin-bottom: 44px;
   }
 
-  .home-quiet   { font-size: 17px; }
-  .home-carry   { font-size: 13px; margin-bottom: 56px; }
-  .home-primary { font-size: 17px; padding: 14px 44px; }
+  .home-quiet     { font-size: 18px; margin-bottom: 14px; }
+  .home-carry     { font-size: 14px; margin-bottom: 58px; }
+  .home-primary   { font-size: 18px; padding: 15px 48px; }
   .home-secondary { font-size: 13px; }
 
   .btn-moon {
@@ -493,7 +593,7 @@ textarea:focus {
 
   .inter-msg {
     font-size: 17px;
-    max-width: 380px;
+    max-width: 480px;
   }
 
   textarea {
@@ -504,17 +604,17 @@ textarea:focus {
 
   .typed-thought {
     font-size: 16px;
-    max-width: 480px;
+    max-width: 560px;
   }
 
   .reflect-q {
     font-size: 18px;
-    max-width: 440px;
+    max-width: 520px;
   }
 
   .closure-text {
     font-size: 17px;
-    max-width: 380px;
+    max-width: 460px;
   }
 
   .light-msg-box {
@@ -523,19 +623,26 @@ textarea:focus {
     min-height: 100px;
   }
 
+  .stay-card     { max-width: 520px; }
+  .stay-written  { font-size: 15px; }
+  .stay-orb      { width: 96px; height: 96px; }
+  .sit-written   { font-size: 15px; }
+  .sit-message   { font-size: 16px; max-width: 440px; }
+
   .stay-msg {
     font-size: 17px;
-    max-width: 380px;
-  }
-
-  .btn-hint {
-    font-size: 12px;
+    max-width: 460px;
   }
 }
 
 @media (min-width: 1100px) {
   .z {
-    max-width: 680px;
+    max-width: 820px;
+    padding: 64px 60px 88px;
+  }
+
+  main {
+    padding: 0 48px;
   }
 
   .moon-orb {
@@ -543,10 +650,14 @@ textarea:focus {
     height: 96px;
   }
 
-  .hero-text {
-    font-size: 18px;
-    max-width: 500px;
-  }
+  .home-quiet   { font-size: 20px; }
+  .home-carry   { font-size: 14px; }
+  .home-primary { font-size: 19px; padding: 16px 54px; }
+
+  .typed-thought { max-width: 620px; }
+  .reflect-q     { max-width: 580px; }
+  .closure-text  { max-width: 520px; }
+  .stay-card     { max-width: 580px; }
 }
 
 /* ── Mobile ─────────────────────────────────────────── */
