@@ -1,3 +1,4 @@
+/* ── Message pools ─────────────────────────────────── */
 const pool = [
   "you've been carrying this for so long you forgot it wasn't always there. it wasn't always there.",
   "somewhere tonight someone is sitting exactly like you are. same hour. same weight. different room.",
@@ -102,78 +103,57 @@ const pool = [
 ];
 
 const writePrompts = [
-  "This space holds no memory of you.\nWrite what you've been carrying. There is no wrong way.",
-  "What you share here vanishes when you let it go.\nYou don't have to hold anything back.",
-  "No one will read this. No one will judge it.\nJust let it exist here for a moment."
+  "this space holds no memory of you.\nwrite what you've been carrying.",
+  "what you write here vanishes when you let it go.\nyou don't have to hold anything back.",
+  "no one will read this. no one will judge it.\njust let it exist here for a moment."
 ];
 
 const reflectQs = [
-  "Where does this feeling live in your body right now?",
-  "What are you most afraid this feeling says about you?",
-  "When did you first start carrying this?",
-  "What would you say to someone you love who felt exactly this way?",
-  "Is this yours to carry — or did someone give it to you?",
-  "What does the quietest part of you already know?",
-  "If this feeling could speak, what would it most want you to hear?"
+  "where does this feeling live in your body right now?",
+  "what are you most afraid this feeling says about you?",
+  "when did you first start carrying this?",
+  "what would you say to someone you love who felt exactly this way?",
+  "is this yours to carry — or did someone give it to you?",
+  "what does the quietest part of you already know?",
+  "if this feeling could speak, what would it most want you to hear?"
 ];
 
 const closureLines = [
-  "It's okay to leave this here.",
-  "You don't have to hold onto this anymore.",
-  "Something has shifted. Even if it's quiet, it's real.",
-  "Whatever just moved through you — it was allowed to."
+  "it's okay to leave this here.",
+  "you don't have to hold onto this anymore.",
+  "something has shifted. even if it's quiet, it's real.",
+  "whatever just moved through you — it was allowed to."
 ];
 
 let userLights = [];
 let lightIdx = 0;
 let shuffled = [...pool].sort(() => Math.random() - 0.5);
+let currentThought = '';
 
-/* Focus management — moves keyboard focus to the right element after each transition */
-const focusTargets = {
-  's0':           () => document.getElementById('btn-leave-it'),
-  's-gate':       () => document.querySelector('#s-gate .inter-msg'),
-  's-write':      () => document.getElementById('thought-input'),
-  's-reflect':    () => document.getElementById('reflect-response'),
-  's-lantern':    () => null,
-  's-closure':    () => document.getElementById('closure-line'),
-  's-stay':       () => document.querySelector('#s-stay .stay-msg'),
-  's-leave-light':() => document.getElementById('light-input'),
-  's-light-sent': () => document.querySelector('#s-light-sent .inter-msg'),
-  's-find':       () => document.getElementById('light-box'),
+/* ── Focus management ─────────────────────────────── */
+const focusMap = {
+  's-home':        () => document.querySelector('#s-home .btn-primary'),
+  's-write':       () => document.getElementById('thought-input'),
+  's-reflect':     () => document.getElementById('reflect-response'),
+  's-closure':     () => document.getElementById('closure-line'),
+  's-stay':        () => document.querySelector('#s-stay .stay-msg'),
+  's-find':        () => document.getElementById('light-msg'),
+  's-leave-light': () => document.getElementById('light-input'),
+  's-light-sent':  () => document.querySelector('#s-light-sent .stay-msg'),
 };
 
-function moveFocus(id) {
-  const getter = focusTargets[id];
-  if (!getter) return;
-  const el = getter();
-  if (!el) return;
-  /* Small delay so the DOM is visible before focus lands */
-  setTimeout(() => {
-    if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
-      el.focus();
-    } else {
-      if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '-1');
-      el.focus({ preventScroll: false });
-    }
-  }, 120);
-}
-
+/* ── Screen transitions ───────────────────────────── */
 function goTo(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
-  el.classList.remove('hidden');
+  el.classList.add('active');
 
   if (id === 's-write') {
     const p = document.getElementById('write-prompt');
     p.textContent = writePrompts[Math.floor(Math.random() * writePrompts.length)];
-    p.classList.remove('slow-in');
-    void p.offsetWidth;
-    p.classList.add('slow-in');
   }
 
-  if (id === 's-find') {
-    showLight();
-  }
+  if (id === 's-find') showLight();
 
   if (id === 's-closure') {
     const cl = document.getElementById('closure-line');
@@ -181,32 +161,29 @@ function goTo(id) {
     const br = document.getElementById('closure-btns');
     br.style.opacity = 0;
     setTimeout(() => {
-      br.style.transition = 'opacity 1.2s ease';
+      br.style.transition = 'opacity 1.4s ease';
       br.style.opacity = 1;
-    }, 1400);
+    }, 1600);
   }
 
-  moveFocus(id);
+  const getter = focusMap[id];
+  if (getter) setTimeout(() => {
+    const el = getter();
+    if (!el) return;
+    if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: false });
+  }, 160);
 }
 
+/* ── Lights ───────────────────────────────────────── */
 function showLight() {
-  const box = document.getElementById('light-box');
+  const box = document.getElementById('light-msg');
   box.style.opacity = 0;
   setTimeout(() => {
     const all = [...shuffled, ...userLights];
     box.textContent = all[lightIdx % all.length];
     box.style.opacity = 1;
   }, 400);
-}
-
-function nextLight() {
-  lightIdx++;
-  const all = [...shuffled, ...userLights];
-  if (lightIdx >= all.length) {
-    shuffled = [...pool].sort(() => Math.random() - 0.5);
-    lightIdx = 0;
-  }
-  showLight();
 }
 
 function doLeaveLight() {
@@ -217,9 +194,11 @@ function doLeaveLight() {
   goTo('s-light-sent');
 }
 
+/* ── Reflect flow ─────────────────────────────────── */
 async function doReflect() {
   const txt = document.getElementById('thought-input').value.trim();
   if (!txt) return;
+  currentThought = txt;
   document.getElementById('btn-continue').disabled = true;
   goTo('s-reflect');
 
@@ -228,13 +207,11 @@ async function doReflect() {
   const rEl = document.getElementById('reflect-response');
   const bEl = document.getElementById('reflect-btns');
 
-  tEl.textContent = '';
-  qEl.textContent = '';
-  rEl.style.opacity = 0;
-  bEl.style.opacity = 0;
+  tEl.textContent = ''; qEl.textContent = '';
+  rEl.style.opacity = 0; bEl.style.opacity = 0;
 
   const preview = txt.length > 160 ? txt.slice(0, 160) + '…' : txt;
-  await typeText(tEl, preview, 38);
+  await typeText(tEl, preview, 36);
   await sleep(700);
 
   let q = reflectQs[Math.floor(Math.random() * reflectQs.length)];
@@ -251,38 +228,36 @@ async function doReflect() {
     });
     const d = await r.json();
     if (d.content?.[0]?.text) q = d.content[0].text.replace(/^["']+|["']+$/g, '').trim();
-  } catch (e) {}
+  } catch(e) {}
 
-  await typeText(qEl, q, 42);
+  await typeText(qEl, q, 40);
   await sleep(500);
-  rEl.style.transition = 'opacity 1.4s ease';
-  rEl.style.opacity = 1;
+  rEl.style.transition = 'opacity 1.4s ease'; rEl.style.opacity = 1;
   await sleep(1500);
-  bEl.style.transition = 'opacity 1.2s ease';
-  bEl.style.opacity = 1;
-
-  /* Move focus to the response textarea once it's visible */
-  setTimeout(() => { rEl.focus(); }, 200);
+  bEl.style.transition = 'opacity 1.2s ease'; bEl.style.opacity = 1;
+  setTimeout(() => rEl.focus(), 200);
   document.getElementById('btn-continue').disabled = false;
 }
 
-function doLetGo() {
-  goTo('s-lantern');
-  runLantern();
+/* ── Release — message drifts into sea ───────────── */
+function doRelease() {
+  const txt = currentThought;
+  /* Show release screen (transparent — world canvas shows through) */
+  goTo('s-release');
+  /* Trigger world.js animation */
+  if (typeof releaseMessage === 'function') releaseMessage(txt);
+  /* goTo('s-closure') is called by world.js after dissolve completes */
 }
 
-function doStay() {
-  goTo('s-stay');
-}
+function doStay() { goTo('s-stay'); }
 
-function sleep(ms) {
-  return new Promise(r => setTimeout(r, ms));
-}
+/* ── Utilities ────────────────────────────────────── */
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function typeText(el, text, delay = 40) {
+async function typeText(el, text, delay = 38) {
   el.textContent = '';
   for (let i = 0; i < text.length; i++) {
     el.textContent += text[i];
-    if (text[i] !== ' ') await sleep(delay + Math.random() * 22);
+    if (text[i] !== ' ') await sleep(delay + Math.random() * 20);
   }
 }
