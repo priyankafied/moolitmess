@@ -15,23 +15,40 @@
     <div class="vignette" aria-hidden="true"></div>
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()" aria-label="Toggle ambient music">&#9834; music</button>
 
-    <main>
-      <h1 class="sr-only">Moonlit Mess — a quiet space to release what you carry</h1>
+   <main>
+  <h1 class="sr-only">leave it under the moon — a quiet space to release what you carry</h1>
 
-      <div class="z">
-        <div class="moon-orb" aria-hidden="true"></div>
-        <div class="site-name" aria-hidden="true">Moonlit Mess</div>
-        <p class="tagline">leave it under the moon</p>
+  <div class="z">
+    <div class="moon-orb" aria-hidden="true"></div>
 
-        <!-- HOME -->
-        <div class="screen" id="s0" role="region" aria-label="Home">
-          <div class="home-copy">
-            <p class="home-quiet">it's quiet here</p>
-            <p class="home-carry">you can leave what you're carrying</p>
-            <button class="home-primary" onclick="goTo('s-gate')" id="btn-leave-it">write it. leave it.</button>
-            <button class="home-secondary" onclick="goTo('s-find')" id="btn-find-light">find your light in the dark</button>
-          </div>
-        </div>
+    <!-- Identity (soft brand, not loud title) -->
+    <div class="site-name" aria-hidden="true">leave it under the moon</div>
+
+    <!-- Optional grounding line (gives context without breaking immersion) -->
+    <p class="tagline">a place for what you're carrying</p>
+
+    <!-- HOME -->
+    <div class="screen" id="s0" role="region" aria-label="Home">
+      <div class="home-copy">
+
+        <p class="home-quiet">it’s quiet here</p>
+
+        <p class="home-carry">you can leave what you’re carrying</p>
+
+        <!-- Primary action (keep only one emotional direction) -->
+        <button class="home-primary" onclick="goTo('s-gate')" id="btn-leave-it">
+          write it. leave it.
+        </button>
+
+        <!-- Secondary action (soft, not competing) -->
+        <button class="home-secondary" onclick="goTo('s-find')" id="btn-find-light">
+          find your light in the dark
+        </button>
+
+      </div>
+    </div>
+  </div>
+</main>
 
         <!-- GATE -->
         <div class="screen hidden" id="s-gate" role="region" aria-label="Before you write">
