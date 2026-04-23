@@ -50,7 +50,7 @@ const focusTargets = {
   's-reflect':    () => document.getElementById('reflect-response'),
   's-lantern':    () => null,
   's-closure':    () => document.getElementById('closure-line'),
-  's-stay':       () => document.querySelector('#s-stay .stay-card'),
+  's-stay':       () => document.querySelector('#s-stay .stay-written'),
   's-sit':        () => document.getElementById('sit-written'),
   's-leave-light':() => document.getElementById('light-input'),
   's-light-sent': () => document.querySelector('#s-light-sent .inter-msg'),
@@ -98,7 +98,7 @@ function goTo(id) {
     setTimeout(() => {
       br.style.transition = 'opacity 1.2s ease';
       br.style.opacity = 1;
-    }, 1400);
+    }, 1600);
   }
 
   moveFocus(id);
