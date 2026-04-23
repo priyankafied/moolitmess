@@ -18,220 +18,308 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════
-   SCENE — pure CSS/SVG, vector quality, no photos
-   Renders crisp at any resolution. No pixelation possible.
-   Sky: deep gradient. Stars: SVG circles. Moon: CSS radial.
-   Ocean: gradient + CSS moonpath. All smooth.
+   SCENE — painterly nocturnal shoreline
+   
+   Philosophy: not a UI backdrop. A place.
+   Like standing at the water's edge at 2am —
+   the scene has weight, atmosphere, and imperfection.
+   
+   Technique: SVG layers composited in CSS.
+   No photos (no pixelation). Vector = infinite resolution.
+   Mist, light scatter, and soft gradients create
+   the painterly quality. Nothing is perfectly geometric.
 ══════════════════════════════════════════════════════ */
+
+/* Scene container */
 #scene {
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: #03050d; /* base colour while layers paint in */
+  /* Base — deep night before layers render */
+  background: #04060e;
 }
 
-/* ── Sky ───────────────────────────────────────────── */
+/* ── SKY — deep, rich, not black ──────────────────────
+   Night sky has colour — indigo at zenith, warmer
+   dusty blue near horizon. The gradient carries this.
+─────────────────────────────────────────────────────*/
 #sky-deep {
   position: absolute;
   inset: 0;
-  /* Deep midnight — richens toward horizon */
   background: linear-gradient(
     180deg,
-    #01020a  0%,
-    #02040e 18%,
-    #030716 38%,
-    #040a1e 56%,
-    #060d26 100%
+    #01020b  0%,    /* near-black zenith */
+    #020410 15%,
+    #030718 35%,    /* deep indigo */
+    #050c22 55%,    /* navy mid-sky */
+    #081428 72%,    /* warmer, dusty near horizon */
+    #0a1a30 85%,    /* horizon glow begins */
+    #0d1e34 100%
   );
-  /* Single slow breath — the whole sky, imperceptibly */
-  animation: skybreathe 18s ease-in-out infinite;
+  /* One almost-imperceptible breath over 20s */
+  animation: skybreathe 20s ease-in-out infinite;
 }
-
 @keyframes skybreathe {
-  0%,  100% { opacity: 0.94; }
-  50%        { opacity: 1.00; }
+  0%,100% { opacity: 0.96; }
+  50%      { opacity: 1.00; }
 }
 
-/* Stars layer covers sky only */
-#sky-mid {
+/* ── MIST LAYER — atmospheric haze ──────────────────── 
+   A faint luminous band in the lower sky.
+   Not visible as a distinct element — just makes
+   the horizon feel inhabited by light.
+─────────────────────────────────────────────────────*/
+#mist {
   position: absolute;
-  inset: 0;
-  height: 58%;
+  left: 0; right: 0;
+  /* Sits just above and at the horizon */
+  top: 44%;
+  height: 24%;
   pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 55%,
+    rgba(140, 168, 210, 0.065) 0%,
+    rgba(110, 140, 188, 0.035) 40%,
+    transparent 75%
+  );
+  animation: mistbreath 22s ease-in-out infinite;
+}
+@keyframes mistbreath {
+  0%,100% { opacity: 0.60; transform: scaleX(1.00); }
+  50%      { opacity: 1.00; transform: scaleX(1.04); }
 }
 
-/* Stars SVG */
+/* ── STARS SVG ───────────────────────────────────────*/
 #stars {
   position: absolute;
   inset: 0;
-  height: 58%;
+  height: 62%;
   width: 100%;
   pointer-events: none;
 }
-
-/* Twinkling stars: dual-sine opacity drift, no rhythm */
 .tw { animation: tw ease-in-out infinite; }
 @keyframes tw {
-  0%,  100% { opacity: 1.00; }
-  35%        { opacity: 0.08; }
-  65%        { opacity: 0.45; }
+  0%,100% { opacity: 1.00; }
+  38%      { opacity: 0.06; }
+  68%      { opacity: 0.40; }
 }
 
-/* ── Moon glow ─────────────────────────────────────── */
-#moon-glow {
+/* ── MOON ATMOSPHERIC GLOW ────────────────────────────
+   Two layers: a wide diffuse corona, and a tighter bloom.
+   The corona is not a perfect circle — it spreads
+   slightly wider horizontally (atmospheric refraction).
+─────────────────────────────────────────────────────*/
+#moon-corona {
   position: absolute;
-  top: 5%;
+  top: 7%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(180px, 26vw, 380px);
-  height: clamp(180px, 26vw, 380px);
+  width: clamp(220px, 32vw, 480px);
+  height: clamp(180px, 26vw, 390px);
   border-radius: 50%;
   pointer-events: none;
-  /* Warm amber-ivory atmospheric bloom — soft, layered */
   background: radial-gradient(
-    circle,
-    rgba(255, 238, 180, 0.09) 0%,
-    rgba(245, 220, 150, 0.04) 35%,
-    rgba(230, 200, 115, 0.015) 60%,
-    transparent 78%
+    ellipse 55% 48% at 50% 50%,
+    rgba(235, 218, 155, 0.085) 0%,
+    rgba(218, 200, 135, 0.040) 32%,
+    rgba(200, 182, 112, 0.015) 58%,
+    transparent 76%
   );
-  animation: moonglow 12s ease-in-out infinite;
+  animation: coronapulse 14s ease-in-out infinite;
+}
+@keyframes coronapulse {
+  0%,100% { opacity: 0.72; }
+  50%      { opacity: 1.00; }
 }
 
-@keyframes moonglow {
-  0%,  100% { opacity: 0.70; transform: translateX(-50%) scale(1.00); }
-  50%        { opacity: 1.00; transform: translateX(-50%) scale(1.04); }
-}
-
-/* ── Moon body ─────────────────────────────────────── */
-#moon-body {
+#moon-bloom {
   position: absolute;
-  top: 5%;
+  top: 7%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(62px, 9vw, 128px);
-  height: clamp(62px, 9vw, 128px);
+  width: clamp(110px, 16vw, 240px);
+  height: clamp(110px, 16vw, 240px);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 210, 0.16) 0%,
+    rgba(248, 232, 175, 0.07) 38%,
+    rgba(235, 215, 145, 0.02) 65%,
+    transparent 80%
+  );
+  animation: coronapulse 14s ease-in-out 1.5s infinite;
+}
+
+/* ── MOON BODY ────────────────────────────────────────
+   Not a flat circle. A sphere with atmosphere.
+   Off-centre highlight, warm ivory-silver tone,
+   crater texture via radial overlays,
+   limb darkening at edges.
+─────────────────────────────────────────────────────*/
+#moon-body {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(58px, 7.5vw, 112px);
+  height: clamp(58px, 7.5vw, 112px);
   border-radius: 50%;
   overflow: hidden;
   pointer-events: none;
-  /* Subtle soft-edge glow — the moon is slightly atmospheric */
+  /* Edge glow — the moon has a small brightened rim 
+     from its own scattered light */
   box-shadow:
-    0 0 0 clamp(3px,0.6vw,8px)   rgba(255,240,185,0.06),
-    0 0 clamp(10px,2vw,28px)     rgba(245,225,160,0.12),
-    0 0 clamp(25px,5vw,65px)     rgba(235,210,140,0.06),
-    0 0 clamp(55px,10vw,130px)   rgba(220,195,120,0.03);
+    0 0 0 1px        rgba(255, 248, 200, 0.08),
+    0 0 8px          rgba(245, 228, 168, 0.18),
+    0 0 24px         rgba(235, 212, 145, 0.08),
+    0 0 55px         rgba(220, 195, 118, 0.04);
 }
 
-/* Moon surface — warm ivory-cream gradient, off-centre light */
+/* Main sphere illumination */
 #moon-surface {
   position: absolute;
   inset: 0;
   border-radius: 50%;
   background: radial-gradient(
-    circle at 40% 36%,
-    #fffdf2  0%,
-    #fdf5d0 12%,
-    #f4e4a8 26%,
-    #e0c872 46%,
-    #c8a84e 64%,
-    #a88232 80%,
-    #806018 100%
+    circle at 38% 34%,
+    #fefcf0 0%,
+    #fdf6d8 10%,
+    #f8e8b0 22%,
+    #ead880 38%,
+    #d4b858 55%,
+    #b89238 72%,
+    #947220 86%,
+    #705008 100%
   );
 }
 
-/* Phase shadow — written by JS */
-#moon-shadow {
+/* Crater texture — warm-toned darker patches */
+#moon-craters {
   position: absolute;
   inset: 0;
   border-radius: 50%;
+  background:
+    radial-gradient(ellipse 30% 22% at 38% 42%, rgba(70,48,12,0.20) 0%, transparent 100%),
+    radial-gradient(circle 13% at 64% 38%, rgba(60,40,8,0.14) 0%, transparent 100%),
+    radial-gradient(circle 9%  at 28% 60%, rgba(55,36,6,0.11) 0%, transparent 100%),
+    radial-gradient(circle 7%  at 72% 24%, rgba(60,42,8,0.09) 0%, transparent 100%),
+    radial-gradient(circle 8%  at 50% 68%, rgba(50,32,4,0.08) 0%, transparent 100%),
+    radial-gradient(circle 10% at 20% 34%, rgba(55,38,6,0.07) 0%, transparent 100%);
 }
 
-/* Limb darkening — edges of sphere are darker, sells 3D */
+/* Phase shadow — applied by scene.js */
+#moon-shadow { position: absolute; inset: 0; border-radius: 50%; }
+
+/* Limb darkening — essential for sphere illusion */
 #moon-limb {
   position: absolute;
   inset: 0;
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 50%,
-    transparent 46%,
-    rgba(28, 14, 2, 0.12)  68%,
-    rgba(18,  8, 0, 0.34)  86%,
-    rgba(10,  4, 0, 0.54) 100%
+    transparent       44%,
+    rgba(24,12,0,0.10) 66%,
+    rgba(16, 6,0,0.30) 84%,
+    rgba( 8, 2,0,0.52) 100%
   );
 }
 
-/* ── Horizon haze ──────────────────────────────────── */
-/* Blends sky into ocean — not visually distinct, just smooth */
+/* ── OCEAN ────────────────────────────────────────────
+   Dark water. Not navy-blue, not teal — almost black
+   with a faint blueish-green tint from moonlight.
+   Slightly lighter at horizon (reflected sky glow).
+─────────────────────────────────────────────────────*/
+#ocean {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  top: 58%;
+  background: linear-gradient(
+    180deg,
+    #071018 0%,     /* horizon — catches faint sky light */
+    #060c14 18%,
+    #050a10 42%,
+    #03070c 68%,
+    #02050a 100%
+  );
+}
+
+/* Horizon blend — sky into ocean, not a hard line */
 #horizon-haze {
   position: absolute;
-  top: 58%;
-  left: 0;
-  right: 0;
-  height: 6%;
+  top: 54%;
+  left: 0; right: 0;
+  height: 10%;
   transform: translateY(-50%);
+  pointer-events: none;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(55, 95, 165, 0.06) 40%,
-    rgba(65, 110, 175, 0.08) 60%,
+    rgba(88, 118, 172, 0.055) 35%,
+    rgba(100, 132, 184, 0.075) 55%,
+    rgba(82, 112, 165, 0.040) 78%,
     transparent 100%
   );
-  pointer-events: none;
-  animation: hazepulse 14s ease-in-out infinite;
+  animation: hazepulse 18s ease-in-out infinite;
 }
-
 @keyframes hazepulse {
-  0%,  100% { opacity: 0.55; }
-  50%        { opacity: 1.00; }
+  0%,100% { opacity: 0.55; }
+  50%      { opacity: 1.00; }
 }
 
-/* ── Ocean ─────────────────────────────────────────── */
-#ocean {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 58%; /* overridden for desktop in media query */
-  /* Deep dark water, slightly lighter at horizon */
-  background: linear-gradient(
-    180deg,
-    #07111e 0%,
-    #060e18 22%,
-    #040b12 55%,
-    #02070b 100%
-  );
-}
-
-/* Moonpath reflection — tapered warm column */
+/* ── MOONPATH REFLECTION ──────────────────────────────
+   The moon's reflection on water.
+   Not a triangle — a blurred, irregular column.
+   Brighter and tighter at horizon, wider and 
+   dimmer toward camera. Slow heartbeat pulse.
+─────────────────────────────────────────────────────*/
 #moonpath {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 0; bottom: 0;
   left: 50%;
-  width: 220px;
+  width: 180px;
   transform: translateX(-50%);
   pointer-events: none;
-  /* Narrow at horizon, wide at bottom */
-  clip-path: polygon(47% 0%, 53% 0%, 100% 100%, 0% 100%);
+  /* Tapered column — narrow at horizon */
+  clip-path: polygon(46.5% 0%, 53.5% 0%, 100% 100%, 0% 100%);
   background: linear-gradient(
     180deg,
-    rgba(255, 235, 155, 0.00) 0%,
-    rgba(255, 232, 148, 0.03) 18%,
-    rgba(255, 238, 158, 0.07) 40%,
-    rgba(255, 242, 165, 0.10) 62%,
-    rgba(252, 234, 150, 0.06) 80%,
-    rgba(244, 224, 138, 0.02) 100%
+    rgba(248, 230, 148, 0.00) 0%,
+    rgba(248, 230, 148, 0.025) 14%,
+    rgba(252, 235, 155, 0.065) 34%,
+    rgba(255, 240, 162, 0.092) 56%,
+    rgba(250, 232, 148, 0.058) 76%,
+    rgba(242, 222, 135, 0.020) 92%,
+    rgba(232, 210, 122, 0.005) 100%
   );
-  animation: pathpulse 13s ease-in-out infinite;
+  animation: pathpulse 15s ease-in-out infinite;
 }
-
 @keyframes pathpulse {
-  0%,  100% { opacity: 0.65; }
-  50%        { opacity: 1.00; }
+  0%,100% { opacity: 0.62; }
+  50%      { opacity: 1.00; }
 }
 
-/* Water ripples — 3 faint horizontal glimmers */
+/* Soft diffuse halo around the moonpath — 
+   water scatters the reflection slightly */
+#moonpath-halo {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 380px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 38% 100% at 50% 30%,
+    rgba(245, 225, 140, 0.028) 0%,
+    rgba(235, 215, 128, 0.010) 50%,
+    transparent 75%
+  );
+  animation: pathpulse 15s ease-in-out 0.8s infinite;
+}
+
+/* Water surface — 3 faint horizontal glimmers
+   at different depths. Barely visible. */
 .ripple {
   position: absolute;
   left: 50%;
@@ -240,45 +328,54 @@ body {
   border-radius: 1px;
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(255, 230, 140, 0.038),
-    rgba(255, 238, 155, 0.062),
-    rgba(255, 230, 140, 0.038),
-    transparent
+    transparent 0%,
+    rgba(240, 222, 130, 0.030) 25%,
+    rgba(248, 232, 145, 0.055) 50%,
+    rgba(240, 222, 130, 0.030) 75%,
+    transparent 100%
   );
   animation: ripplepulse linear infinite;
 }
-
 @keyframes ripplepulse {
-  0%,  100% { opacity: 0.25; }
-  50%        { opacity: 0.85; }
+  0%,100% { opacity: 0.22; }
+  50%      { opacity: 0.80; }
 }
 
-/* ── Vignette ──────────────────────────────────────── */
+/* ── VIGNETTE ─────────────────────────────────────────
+   Darkens corners and edges, pulls eye to centre.
+   Not uniform — heavier at bottom (ocean depth),
+   lighter at top centre (open sky feeling).
+─────────────────────────────────────────────────────*/
 #vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse 72% 72% at 50% 42%,
-    transparent 18%,
-    rgba(1, 3, 10, 0.24) 58%,
-    rgba(0, 1, 6,  0.66) 100%
-  );
+  background:
+    /* Corner darkening */
+    radial-gradient(
+      ellipse 75% 70% at 50% 44%,
+      transparent 20%,
+      rgba(1, 3, 10, 0.22) 60%,
+      rgba(0, 1,  7, 0.62) 100%
+    );
 }
 
-/* ── Shooting stars ────────────────────────────────── */
+/* ── SHOOTING STARS ───────────────────────────────────
+   Rare. Subtle. Warm white, not bright blue-white.
+   One at a time, never distracting.
+─────────────────────────────────────────────────────*/
 #shooters { position: absolute; inset: 0; pointer-events: none; }
 
 .mm-shooter {
   position: absolute;
   height: 1px;
   border-radius: 2px;
+  /* Warm white — like a real meteor, not a laser */
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(240, 232, 192, 0.42),
-    rgba(235, 224, 175, 0.10),
+    rgba(235, 225, 185, 0.38),
+    rgba(228, 218, 172, 0.10),
     transparent
   );
   transform-origin: left center;
@@ -286,11 +383,10 @@ body {
   pointer-events: none;
   animation: mmshoot var(--d) linear forwards;
 }
-
 @keyframes mmshoot {
   0%   { opacity: 0;    transform: rotate(var(--a)) scaleX(0.04); }
-  7%   { opacity: 0.44; }
-  82%  { opacity: 0.20; }
+  8%   { opacity: 0.40; }
+  84%  { opacity: 0.18; }
   100% { opacity: 0;    transform: rotate(var(--a)) translateX(var(--l)) scaleX(1); }
 }
 
@@ -788,11 +884,14 @@ textarea:focus {
   #sky-deep,
   #sky-mid,
   #stars         { height: 55%; }
-  #moon-glow     { top: 10%; width: 280px; height: 280px; }
-  #moon-body     { top: 10%; width: 90px;  height: 90px; }
+  #moon-corona   { top: 9%; width: 340px; height: 280px; }
+  #moon-bloom    { top: 9%; width: 180px; height: 180px; }
+  #moon-body     { top: 9%; width: 88px;  height: 88px; }
+  #sky-deep, #sky-mid, #stars { height: 55%; }
   #ocean         { top: 55%; }
   #horizon-haze  { top: 55%; }
   #moonpath      { width: 260px; }
+  #moonpath-halo { width: 440px; }
 
   /* Layout: proper desktop column — not mobile stretched */
   main  { padding: 0 48px; align-items: center; }
@@ -851,8 +950,9 @@ textarea:focus {
 @media (min-width: 1100px) {
 
   /* Scene: moon higher and slightly larger on wide screens */
-  #moon-glow    { top: 9%; width: 330px; height: 330px; }
-  #moon-body    { top: 9%; width: 110px; height: 110px; }
+  #moon-corona  { top: 8%; width: 400px; height: 320px; }
+  #moon-bloom   { top: 8%; width: 210px; height: 210px; }
+  #moon-body    { top: 8%; width: 105px; height: 105px; }
   #sky-deep,
   #sky-mid,
   #stars        { height: 56%; }
