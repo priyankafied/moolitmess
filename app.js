@@ -114,15 +114,7 @@ function showLight() {
   }, 400);
 }
 
-function nextLight() {
-  lightIdx++;
-  const all = [...shuffled, ...userLights];
-  if (lightIdx >= all.length) {
-    shuffled = [...pool].sort(() => Math.random() - 0.5);
-    lightIdx = 0;
-  }
-  showLight();
-}
+function nextLight() { goTo('s-leave-light'); }
 
 function doLeaveLight() {
   const txt = document.getElementById('light-input').value.trim();
@@ -132,8 +124,7 @@ function doLeaveLight() {
   goTo('s-light-sent');
 }
 
-let currentThought = '';   /* saved when user continues to reflect */
-
+let currentThought = '';
 async function doReflect() {
   const txt = document.getElementById('thought-input').value.trim();
   if (!txt) return;
@@ -152,28 +143,24 @@ async function doReflect() {
   bEl.style.opacity = 0;
 
   const preview = txt.length > 160 ? txt.slice(0, 160) + '…' : txt;
-
-  /* Start API fetch immediately — runs in parallel while text types */
-  let q = reflectQs[Math.floor(Math.random() * reflectQs.length)];
-  const fetchQ = fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 80,
-      system: "You are a quiet, gentle presence. Someone shares something heavy. Ask ONE soft, somatic question under 18 words. Poetic, not clinical. Help them feel, not fix. No preamble. Just the question.",
-      messages: [{ role: "user", content: txt }]
-    })
-  }).then(r => r.json()).then(d => {
-    if (d.content?.[0]?.text) q = d.content[0].text.replace(/^["']+|["']+$/g, '').trim();
-  }).catch(() => {});
-
-  /* Type the user's thought while fetch runs in background */
   await typeText(tEl, preview, 38);
-  await sleep(600);
+  await sleep(700);
 
-  /* Wait for fetch to finish (usually already done by now) */
-  await fetchQ;
+  let q = reflectQs[Math.floor(Math.random() * reflectQs.length)];
+  try {
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: "You are a quiet, gentle presence. Someone shares something heavy. Ask ONE soft, somatic question under 18 words. Poetic, not clinical. Help them feel, not fix. No preamble. Just the question.",
+        messages: [{ role: "user", content: txt }]
+      })
+    });
+    const d = await r.json();
+    if (d.content?.[0]?.text) q = d.content[0].text.replace(/^["']+|["']+$/g, '').trim();
+  } catch (e) {}
 
   await typeText(qEl, q, 42);
   await sleep(500);
@@ -194,51 +181,26 @@ function doLetGo() {
 }
 
 function doStay() {
-  /* Populate stay card with what the user wrote */
-  const written = document.getElementById('stay-written');
-  if (written && currentThought) {
-    const preview = currentThought.length > 200
-      ? currentThought.slice(0, 200) + '…'
-      : currentThought;
-    written.textContent = preview;
-  }
-  /* Shift orb hue slightly based on text length — subtle personalisation */
+  const sw = document.getElementById('stay-written');
+  if (sw && currentThought) sw.textContent = currentThought.length > 200 ? currentThought.slice(0,200)+'…' : currentThought;
   const orb = document.getElementById('stay-orb');
   if (orb) {
-    const hue = (currentThought.length * 3) % 60;  /* 0–60 deg shift */
-    orb.style.background = `radial-gradient(circle at 38% 35%,
-      hsla(${240 + hue},60%,80%,0.55) 0%,
-      hsla(${240 + hue},50%,65%,0.28) 45%,
-      hsla(${240 + hue},40%,50%,0.08) 100%
-    )`;
+    const h = (currentThought.length * 3) % 60;
+    orb.style.background = `radial-gradient(circle at 38% 35%,hsla(${240+h},60%,80%,0.55) 0%,hsla(${240+h},50%,65%,0.28) 45%,hsla(${240+h},40%,50%,0.08) 100%)`;
   }
   goTo('s-stay');
 }
 
 function doSitWithIt() {
-  const sitWritten = document.getElementById('sit-written');
-  if (sitWritten && currentThought) {
-    const preview = currentThought.length > 200
-      ? currentThought.slice(0, 200) + '…'
-      : currentThought;
-    sitWritten.textContent = preview;
-  }
-  const sitMsg = document.getElementById('sit-message');
-  const sitNav = document.getElementById('sit-nav');
-  if (sitMsg) {
-    sitMsg.classList.remove('revealed');
-    sitMsg.textContent = 'Acknowledge and accept your feelings instead of avoiding, suppressing, or judging them.';
-  }
-  if (sitNav) sitNav.classList.remove('visible');
+  const sw = document.getElementById('sit-written');
+  if (sw && currentThought) sw.textContent = currentThought.length > 200 ? currentThought.slice(0,200)+'…' : currentThought;
+  const sm = document.getElementById('sit-message');
+  const sn = document.getElementById('sit-nav');
+  if (sm) { sm.classList.remove('revealed'); sm.textContent = 'Acknowledge and accept your feelings instead of avoiding, suppressing, or judging them.'; }
+  if (sn) sn.classList.remove('visible');
   goTo('s-sit');
-  /* Message fades in after 6s of stillness */
-  setTimeout(() => {
-    if (sitMsg) sitMsg.classList.add('revealed');
-  }, 6000);
-  /* Navigation appears 3s after the message — never a dead end */
-  setTimeout(() => {
-    if (sitNav) sitNav.classList.add('visible');
-  }, 9500);
+  setTimeout(() => { if (sm) sm.classList.add('revealed'); }, 6000);
+  setTimeout(() => { if (sn) sn.classList.add('visible'); }, 9500);
 }
 
 function sleep(ms) {
