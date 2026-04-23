@@ -57,7 +57,7 @@ body {
 #sky-mid {
   position: absolute;
   inset: 0;
-  height: 54%;
+  height: 58%;
   pointer-events: none;
 }
 
@@ -65,7 +65,7 @@ body {
 #stars {
   position: absolute;
   inset: 0;
-  height: 54%;
+  height: 58%;
   width: 100%;
   pointer-events: none;
 }
@@ -165,10 +165,10 @@ body {
 /* Blends sky into ocean — not visually distinct, just smooth */
 #horizon-haze {
   position: absolute;
-  top: 50%;
+  top: 58%;
   left: 0;
   right: 0;
-  height: 7%;
+  height: 6%;
   transform: translateY(-50%);
   background: linear-gradient(
     180deg,
@@ -192,7 +192,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  top: 54%; /* overridden for desktop in media query */
+  top: 58%; /* overridden for desktop in media query */
   /* Deep dark water, slightly lighter at horizon */
   background: linear-gradient(
     180deg,
@@ -776,80 +776,139 @@ textarea:focus {
 /* ══════════════════════════════════════════════════════
    DESKTOP
 ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   TABLET / SMALL DESKTOP (768px+)
+   Proper horizon: sky 55%, ocean 45%.
+   Moon lower in frame — more compositionally centred.
+   Content column widens — stops feeling like stretched mobile.
+══════════════════════════════════════════════════════ */
 @media (min-width: 768px) {
-  /* ── Scene ── */
-  /* Moon centred, comfortable size for typical laptop */
-  #moon-glow { top: 6%; width: clamp(220px, 22vw, 340px); height: clamp(220px, 22vw, 340px); }
-  #moon-body { top: 6%; width: clamp(72px,  8vw, 112px);  height: clamp(72px, 8vw, 112px); }
-  #ocean     { top: 52%; }
 
-  /* ── Layout ── */
-  .z    { max-width: 700px; padding: 68px 40px 90px; }
+  /* Scene: rebalance sky/ocean split for landscape viewports */
+  #sky-deep,
+  #sky-mid,
+  #stars         { height: 55%; }
+  #moon-glow     { top: 10%; width: 280px; height: 280px; }
+  #moon-body     { top: 10%; width: 90px;  height: 90px; }
+  #ocean         { top: 55%; }
+  #horizon-haze  { top: 55%; }
+  #moonpath      { width: 260px; }
+
+  /* Layout: proper desktop column — not mobile stretched */
   main  { padding: 0 48px; align-items: center; }
+  .z    { max-width: 720px; padding: 0 0; min-height: 100vh;
+          justify-content: center; display: flex; flex-direction: column;
+          align-items: center; }
 
-  /* ── Home ── */
-  .wordmark    { font-size: 12px; letter-spacing: 0.30em; margin-bottom: 42px; }
-  .home-line-1 { font-size: 34px; margin-bottom: 14px; }
-  .home-line-2 { font-size: 15px; letter-spacing: 0.07em; margin-bottom: 64px; }
-  .threshold-btn       { font-size: 17px; padding: 13px 46px; letter-spacing: 0.12em; }
-  .threshold-btn.slim  { font-size: 15px; padding: 10px 30px; }
+  /* Home: deliberate desktop scale */
+  .wordmark    { font-size: 11px; letter-spacing: 0.32em; margin-bottom: 44px; }
+  .home-line-1 { font-size: 38px; line-height: 1.25; margin-bottom: 16px; }
+  .home-line-2 { font-size: 15px; letter-spacing: 0.07em; margin-bottom: 68px; }
+  .home-threshold { gap: 18px; }
+  .threshold-btn       { font-size: 16px; padding: 12px 44px; letter-spacing: 0.11em; }
+  .threshold-btn.slim  { font-size: 14px; padding: 10px 28px; }
   .threshold-ghost     { font-size: 14px; }
 
-  /* ── Body text ── */
-  .passage-text  { font-size: 23px; max-width: 460px; line-height: 1.90; margin-bottom: 34px; }
-  .link-btn      { font-size: 15px; }
+  /* Navigation / passage */
+  .passage-text { font-size: 22px; max-width: 480px; line-height: 1.85; margin-bottom: 32px; }
+  .link-btn     { font-size: 15px; }
+  .passage-row  { gap: 24px; }
 
-  /* ── Writing area ── */
-  textarea       { font-size: 20px; line-height: 2.0; min-height: 148px; padding: 20px 26px; }
-  .note-footer   { font-size: 12px; }
+  /* Writing area */
+  textarea      { font-size: 20px; line-height: 2.0; min-height: 155px; padding: 22px 28px; }
+  .note-wrap::before {
+    background-image: repeating-linear-gradient(
+      transparent, transparent 39px,
+      rgba(168,148,98,0.04) 39px, rgba(168,148,98,0.04) 40px
+    );
+  }
+  .note-footer  { font-size: 12px; margin-top: 10px; }
 
-  /* ── Reflect ── */
-  .echo-thought  { font-size: 17px; max-width: 500px; }
-  .reflect-q     { font-size: 24px; max-width: 500px; line-height: 1.70; margin-bottom: 26px; }
+  /* Reflect */
+  .echo-thought { font-size: 17px; max-width: 520px; margin-bottom: 22px; }
+  .reflect-q    { font-size: 25px; max-width: 520px; line-height: 1.68; margin-bottom: 28px; }
 
-  /* ── Closure ── */
-  .closure-text  { font-size: 25px; max-width: 420px; line-height: 1.90; }
+  /* Closure */
+  .closure-text { font-size: 26px; max-width: 440px; line-height: 1.88; }
 
-  /* ── Stay / Sit ── */
-  .stay-card     { max-width: 500px; padding: 36px 32px 28px; }
-  .stay-written  { font-size: 18px; }
-  .sit-message   { font-size: 22px; max-width: 440px; }
-  .sit-written   { font-size: 18px; }
+  /* Stay / Sit */
+  .stay-card    { max-width: 520px; padding: 34px 32px 28px; }
+  .stay-written { font-size: 18px; }
+  .stay-orb     { width: 64px; height: 64px; }
+  .sit-message  { font-size: 22px; max-width: 460px; }
+  .sit-written  { font-size: 18px; }
 
-  /* ── Light card ── */
-  .light-card    { font-size: 21px; padding: 32px 36px; max-width: 560px; }
-  .light-label   { font-size: 12px; }
-}
-
-@media (min-width: 1100px) {
-  /* ── Scene — wide desktop ── */
-  #moon-glow { top: 5%; width: 300px; height: 300px; }
-  #moon-body { top: 5%; width: 104px; height: 104px; }
-  #ocean     { top: 50%; }
-
-  /* ── Layout ── */
-  .z    { max-width: 780px; padding: 72px 48px 96px; }
-  main  { padding: 0 60px; }
-
-  /* ── Home ── */
-  .home-line-1 { font-size: 40px; margin-bottom: 16px; }
-  .home-line-2 { font-size: 16px; margin-bottom: 72px; }
-  .threshold-btn { font-size: 18px; padding: 14px 52px; }
-
-  /* ── Body text ── */
-  .passage-text  { font-size: 26px; max-width: 520px; }
-  .reflect-q     { font-size: 27px; max-width: 540px; }
-  .closure-text  { font-size: 28px; max-width: 480px; }
-  .light-card    { font-size: 23px; }
-  .sit-message   { font-size: 24px; max-width: 480px; }
+  /* Light card */
+  .light-card   { font-size: 22px; padding: 32px 36px; max-width: 560px; }
+  .light-label  { font-size: 12px; }
 }
 
 /* ══════════════════════════════════════════════════════
-   MOBILE
+   WIDE DESKTOP (1100px+)
+   More sky visible above moon. Moon stays well-framed.
+   Wider reading column — proper line lengths.
+══════════════════════════════════════════════════════ */
+@media (min-width: 1100px) {
+
+  /* Scene: moon higher and slightly larger on wide screens */
+  #moon-glow    { top: 9%; width: 330px; height: 330px; }
+  #moon-body    { top: 9%; width: 110px; height: 110px; }
+  #sky-deep,
+  #sky-mid,
+  #stars        { height: 56%; }
+  #ocean        { top: 56%; }
+  #horizon-haze { top: 56%; }
+  #moonpath     { width: 300px; }
+
+  /* Layout */
+  .z    { max-width: 840px; }
+  main  { padding: 0 72px; }
+
+  /* Home */
+  .home-line-1 { font-size: 44px; margin-bottom: 18px; }
+  .home-line-2 { font-size: 16px; margin-bottom: 76px; }
+  .threshold-btn { font-size: 17px; padding: 13px 50px; }
+
+  /* Body */
+  .passage-text { font-size: 24px; max-width: 540px; }
+  .reflect-q    { font-size: 27px; max-width: 560px; }
+  .closure-text { font-size: 28px; max-width: 500px; }
+  .light-card   { font-size: 23px; max-width: 600px; }
+  .sit-message  { font-size: 24px; max-width: 500px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE (480px and below)
+   Improve legibility — boost small text, tighten spacing.
 ══════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .z { padding: 48px 0 64px; }
-  main { padding: 0 20px; }
+  .z { padding: 52px 0 68px; }
+  main { padding: 0 22px; }
   .home-threshold, .passage-row { flex-direction: column; align-items: center; }
-  .threshold-btn { width: 210px; text-align: center; }
+  .threshold-btn { width: 220px; text-align: center; }
+
+  /* Boost small text for legibility */
+  .wordmark    { font-size: 11px; }
+  .home-line-1 { font-size: 26px; }
+  .home-line-2 { font-size: 14px; }
+  .threshold-btn       { font-size: 16px; padding: 12px 0; }
+  .threshold-ghost     { font-size: 14px; }
+
+  .passage-text   { font-size: 20px; max-width: 100%; }
+  .link-btn       { font-size: 15px; }
+
+  textarea        { font-size: 18px; padding: 16px 18px; min-height: 120px; }
+  .note-footer    { font-size: 12px; }
+
+  .echo-thought   { font-size: 15px; }
+  .reflect-q      { font-size: 20px; max-width: 100%; }
+
+  .closure-text   { font-size: 20px; max-width: 100%; }
+
+  .stay-written   { font-size: 15px; }
+  .sit-written    { font-size: 15px; }
+  .sit-message    { font-size: 18px; max-width: 100%; }
+
+  .light-card     { font-size: 18px; padding: 22px 20px; }
+  .light-label    { font-size: 12px; }
 }

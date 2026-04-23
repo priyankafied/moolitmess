@@ -95,7 +95,7 @@ function buildMusic() {
   const seq = [
     { f: 587.33, v: 0.12, d: 5.5 }, null, null,
     { f: 440.00, v: 0.10, d: 6.0 }, null,
-    { f: 349.23, v: 0.08, d: 7.0 }, null, null, null,
+    { f: 349.23, v: 0.11, d: 7.0 }, null, null, null,
     { f: 293.66, v: 0.13, d: 6.5 }, null,
     { f: 261.63, v: 0.09, d: 5.0 },
     { f: 349.23, v: 0.12, d: 8.0 }, null, null,
