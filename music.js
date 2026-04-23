@@ -8,7 +8,7 @@
   - Ocean: pink noise → bandpass 80–750Hz → breathing LFO → limiter
   - Piano: sparse D-minor notes, sine+triangle, 2.4s reverb, 68% wet
   - Crash: rare (25–45s), very low volume, slow attack
-  - Master gain: 0.32 (low — never demands attention)
+  - Master gain: 0.42 (soft but present)
   - Fade in: 8 seconds (barely noticeable on arrival)
 */
 
@@ -27,7 +27,7 @@ function buildMusic() {
   /* Master — very low, slow fade (8s) */
   const master = aCtx.createGain();
   master.gain.setValueAtTime(0, aCtx.currentTime);
-  master.gain.linearRampToValueAtTime(0.32, aCtx.currentTime + 8);
+  master.gain.linearRampToValueAtTime(0.42, aCtx.currentTime + 7);
   master.connect(aCtx.destination);
   mNodes.push(master);
 
@@ -93,20 +93,20 @@ function buildMusic() {
     Velocities intentionally low (0.07–0.11).
   */
   const seq = [
-    { f: 587.33, v: 0.09, d: 5.5 }, null, null,
-    { f: 440.00, v: 0.08, d: 6.0 }, null,
+    { f: 587.33, v: 0.12, d: 5.5 }, null, null,
+    { f: 440.00, v: 0.10, d: 6.0 }, null,
     { f: 349.23, v: 0.08, d: 7.0 }, null, null, null,
-    { f: 293.66, v: 0.10, d: 6.5 }, null,
-    { f: 261.63, v: 0.07, d: 5.0 },
-    { f: 349.23, v: 0.09, d: 8.0 }, null, null,
-    { f: [293.66, 440.00], v: 0.07, d: 7.5 }, null, null, null,
-    { f: 523.25, v: 0.08, d: 5.0 }, null,
-    { f: 440.00, v: 0.07, d: 5.5 }, null,
-    { f: 349.23, v: 0.08, d: 6.0 }, null,
-    { f: 220.00, v: 0.10, d: 9.0 }, null, null, null, null,
-    { f: 698.46, v: 0.05, d: 4.5 }, null, null,
-    { f: 293.66, v: 0.09, d: 6.0 }, null,
-    { f: [220.00, 349.23], v: 0.06, d: 8.0 }, null, null, null, null, null,
+    { f: 293.66, v: 0.13, d: 6.5 }, null,
+    { f: 261.63, v: 0.09, d: 5.0 },
+    { f: 349.23, v: 0.12, d: 8.0 }, null, null,
+    { f: [293.66, 440.00], v: 0.09, d: 7.5 }, null, null, null,
+    { f: 523.25, v: 0.10, d: 5.0 }, null,
+    { f: 440.00, v: 0.09, d: 5.5 }, null,
+    { f: 349.23, v: 0.10, d: 6.0 }, null,
+    { f: 220.00, v: 0.13, d: 9.0 }, null, null, null, null,
+    { f: 698.46, v: 0.07, d: 4.5 }, null, null,
+    { f: 293.66, v: 0.12, d: 6.0 }, null,
+    { f: [220.00, 349.23], v: 0.08, d: 8.0 }, null, null, null, null, null,
   ];
 
   let si = 0;
@@ -158,7 +158,7 @@ function buildMusic() {
   lfo.connect(lfoG);
 
   const oVol = aCtx.createGain();
-  oVol.gain.value = 0.11;  /* ocean very quiet — felt not heard */
+  oVol.gain.value = 0.14;  /* ocean present but not distracting */
   lfoG.connect(oVol.gain);
 
   ocean.connect(oHp); oHp.connect(oLp); oLp.connect(oVol); oVol.connect(limiter);
@@ -180,7 +180,7 @@ function buildMusic() {
     clp.type = 'lowpass'; clp.frequency.value = 380;
     const cg = aCtx.createGain();
     cg.gain.setValueAtTime(0, now);
-    cg.gain.linearRampToValueAtTime(0.09, now + 1.0);  /* very soft, slow rise */
+    cg.gain.linearRampToValueAtTime(0.12, now + 0.9);
     cg.gain.linearRampToValueAtTime(0,    now + 3.2);
     crash.connect(clp); clp.connect(cg); cg.connect(limiter);
     crash.start(now); mNodes.push(crash);

@@ -13,11 +13,143 @@
 </head>
 <body>
 
-  <!-- Scene: photograph + vignette + shooters. Nothing else. -->
+  <!-- Scene: pure CSS, vector quality, no photos, no pixelation -->
   <div id="scene" aria-hidden="true">
-    <div id="bg"></div>
+
+    <!-- Sky layers — bottom to top -->
+    <div id="sky-deep"></div>
+    <div id="sky-mid"></div>
+
+    <!-- Stars: SVG at full viewport resolution -->
+    <svg id="stars" xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid slice"
+         aria-hidden="true">
+
+      <!-- Field of very faint stars -->
+      <circle cx="38"  cy="18"  r="0.5" fill="rgba(220,218,210,0.10)"/>
+      <circle cx="95"  cy="42"  r="0.4" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="158" cy="14"  r="0.5" fill="rgba(235,228,195,0.09)"/>
+      <circle cx="224" cy="52"  r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="292" cy="28"  r="0.3" fill="rgba(220,218,210,0.09)"/>
+      <circle cx="355" cy="8"   r="0.4" fill="rgba(235,228,195,0.08)"/>
+      <circle cx="418" cy="38"  r="0.5" fill="rgba(220,218,210,0.09)"/>
+      <circle cx="482" cy="20"  r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="548" cy="46"  r="0.4" fill="rgba(235,228,195,0.08)"/>
+      <circle cx="612" cy="12"  r="0.5" fill="rgba(220,218,210,0.10)"/>
+      <circle cx="676" cy="34"  r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="738" cy="18"  r="0.3" fill="rgba(235,228,195,0.09)"/>
+      <circle cx="802" cy="48"  r="0.5" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="864" cy="22"  r="0.4" fill="rgba(220,218,210,0.09)"/>
+      <circle cx="924" cy="40"  r="0.3" fill="rgba(235,228,195,0.07)"/>
+      <circle cx="968" cy="14"  r="0.4" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="58"  cy="72"  r="0.4" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="122" cy="88"  r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="196" cy="66"  r="0.5" fill="rgba(235,228,195,0.09)"/>
+      <circle cx="268" cy="82"  r="0.4" fill="rgba(180,210,255,0.07)"/>
+      <circle cx="334" cy="60"  r="0.3" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="402" cy="90"  r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="466" cy="68"  r="0.5" fill="rgba(235,228,195,0.08)"/>
+      <circle cx="530" cy="84"  r="0.3" fill="rgba(220,218,210,0.09)"/>
+      <circle cx="596" cy="62"  r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="660" cy="78"  r="0.5" fill="rgba(180,210,255,0.07)"/>
+      <circle cx="722" cy="54"  r="0.3" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="786" cy="86"  r="0.4" fill="rgba(235,228,195,0.09)"/>
+      <circle cx="848" cy="70"  r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="910" cy="56"  r="0.4" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="955" cy="80"  r="0.5" fill="rgba(235,228,195,0.07)"/>
+      <circle cx="28"  cy="118" r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="108" cy="132" r="0.3" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="174" cy="108" r="0.5" fill="rgba(235,228,195,0.08)"/>
+      <circle cx="244" cy="124" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="312" cy="100" r="0.3" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="380" cy="136" r="0.4" fill="rgba(235,228,195,0.07)"/>
+      <circle cx="450" cy="112" r="0.5" fill="rgba(220,218,210,0.08)"/>
+      <circle cx="514" cy="128" r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="582" cy="106" r="0.4" fill="rgba(235,228,195,0.08)"/>
+      <circle cx="646" cy="122" r="0.3" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="714" cy="98"  r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="776" cy="130" r="0.5" fill="rgba(235,228,195,0.08)"/>
+      <circle cx="838" cy="114" r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="900" cy="102" r="0.4" fill="rgba(180,210,255,0.07)"/>
+      <circle cx="948" cy="126" r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="72"  cy="160" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="146" cy="174" r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="216" cy="150" r="0.4" fill="rgba(235,228,195,0.07)"/>
+      <circle cx="286" cy="168" r="0.5" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="356" cy="155" r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="424" cy="178" r="0.4" fill="rgba(235,228,195,0.06)"/>
+      <circle cx="494" cy="162" r="0.3" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="562" cy="148" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="630" cy="172" r="0.5" fill="rgba(235,228,195,0.07)"/>
+      <circle cx="698" cy="156" r="0.3" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="766" cy="168" r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="832" cy="144" r="0.3" fill="rgba(235,228,195,0.06)"/>
+      <circle cx="896" cy="160" r="0.4" fill="rgba(220,218,210,0.07)"/>
+      <circle cx="952" cy="176" r="0.3" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="46"  cy="208" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="130" cy="220" r="0.3" fill="rgba(220,218,210,0.05)"/>
+      <circle cx="198" cy="200" r="0.4" fill="rgba(235,228,195,0.06)"/>
+      <circle cx="270" cy="215" r="0.3" fill="rgba(220,218,210,0.05)"/>
+      <circle cx="342" cy="205" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="414" cy="222" r="0.3" fill="rgba(235,228,195,0.05)"/>
+      <circle cx="488" cy="210" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="558" cy="198" r="0.3" fill="rgba(220,218,210,0.05)"/>
+      <circle cx="628" cy="218" r="0.4" fill="rgba(235,228,195,0.06)"/>
+      <circle cx="700" cy="206" r="0.3" fill="rgba(220,218,210,0.05)"/>
+      <circle cx="770" cy="216" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="840" cy="200" r="0.3" fill="rgba(235,228,195,0.05)"/>
+      <circle cx="912" cy="212" r="0.4" fill="rgba(220,218,210,0.06)"/>
+      <circle cx="960" cy="202" r="0.3" fill="rgba(220,218,210,0.05)"/>
+
+      <!-- Slightly brighter anchor stars — depth and character -->
+      <circle cx="64"  cy="30"  r="0.85" fill="rgba(240,232,195,0.26)"/>
+      <circle cx="188" cy="44"  r="0.75" fill="rgba(220,218,210,0.28)"/>
+      <circle cx="458" cy="26"  r="0.90" fill="rgba(235,225,175,0.24)"/>
+      <circle cx="622" cy="58"  r="0.70" fill="rgba(178,210,255,0.22)"/>
+      <circle cx="130" cy="140" r="0.80" fill="rgba(240,232,195,0.22)"/>
+      <circle cx="542" cy="36"  r="0.70" fill="rgba(220,218,210,0.24)"/>
+      <circle cx="748" cy="44"  r="0.75" fill="rgba(235,225,175,0.22)"/>
+      <circle cx="870" cy="60"  r="0.65" fill="rgba(220,218,210,0.20)"/>
+      <circle cx="936" cy="32"  r="0.70" fill="rgba(240,232,195,0.19)"/>
+
+      <!-- Twinkling stars: CSS animation, irregular timing -->
+      <circle cx="312" cy="36"  r="0.60" fill="rgba(240,235,200,0.22)" class="tw" style="animation-duration:7.8s;animation-delay:0s"/>
+      <circle cx="96"  cy="154" r="0.50" fill="rgba(240,232,195,0.18)" class="tw" style="animation-duration:10.4s;animation-delay:2.3s"/>
+      <circle cx="496" cy="118" r="0.60" fill="rgba(220,218,210,0.20)" class="tw" style="animation-duration:6.8s;animation-delay:4.7s"/>
+      <circle cx="218" cy="64"  r="0.50" fill="rgba(178,210,255,0.20)" class="tw" style="animation-duration:11.8s;animation-delay:1.5s"/>
+      <circle cx="600" cy="50"  r="0.60" fill="rgba(240,232,195,0.18)" class="tw" style="animation-duration:9.2s;animation-delay:3.6s"/>
+      <circle cx="386" cy="142" r="0.48" fill="rgba(220,218,210,0.16)" class="tw" style="animation-duration:14.2s;animation-delay:0.8s"/>
+      <circle cx="42"  cy="184" r="0.46" fill="rgba(235,225,175,0.15)" class="tw" style="animation-duration:11.4s;animation-delay:5.8s"/>
+      <circle cx="774" cy="56"  r="0.55" fill="rgba(220,218,210,0.17)" class="tw" style="animation-duration:16.0s;animation-delay:3.2s"/>
+      <circle cx="886" cy="126" r="0.50" fill="rgba(240,232,195,0.16)" class="tw" style="animation-duration:13.5s;animation-delay:7.0s"/>
+      <circle cx="666" cy="92"  r="0.52" fill="rgba(178,210,255,0.17)" class="tw" style="animation-duration:9.8s;animation-delay:2.8s"/>
+    </svg>
+
+    <!-- Moon: glow + body + phase shadow + limb darkening -->
+    <div id="moon-glow"></div>
+    <div id="moon-body">
+      <div id="moon-surface"></div>
+      <div id="moon-shadow"></div>
+      <div id="moon-limb"></div>
+    </div>
+
+    <!-- Atmospheric horizon -->
+    <div id="horizon-haze"></div>
+
+    <!-- Ocean -->
+    <div id="ocean">
+      <div id="moonpath"></div>
+      <div class="ripple" id="r1"></div>
+      <div class="ripple" id="r2"></div>
+      <div class="ripple" id="r3"></div>
+    </div>
+
+    <!-- Vignette -->
     <div id="vignette"></div>
+
+    <!-- Shooting stars -->
     <div id="shooters"></div>
+
   </div>
 
   <button class="sound-toggle" id="musicBtn" onclick="toggleMusic()" aria-label="Toggle ambient sound">&#9834;</button>
