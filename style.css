@@ -18,10 +18,13 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════
-   SCENE — a painted night. Nothing moves.
-   Three elements: sky with stars, one moon, dark sea.
-   No animation except one barely-perceptible 22s breath
-   on the whole scene, and faint occasional shooting star.
+   SCENE — the painting is the scene
+   
+   The image carries all atmosphere.
+   We add nothing to it except:
+   1. A vignette to pull focus inward
+   2. One near-imperceptible water shimmer
+      (CSS mask animation on the lower half only)
 ══════════════════════════════════════════════════════ */
 
 #scene {
@@ -29,220 +32,70 @@ body {
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: #030508;
+  background: #04080e; /* base colour while image loads */
 }
 
-/* ── SKY ─────────────────────────────────────────────
-   Deep, warm indigo. Horizon picks up the faintest
-   pale tone from the sea below.
+/* ── Background image — full bleed, never stretched ──
+   object-fit: cover equivalent via background-size.
+   Position anchors the moon in upper-centre.
+   On portrait (mobile), shifts down slightly so ocean
+   is visible rather than cropping to sky only.
 ───────────────────────────────────────────────────── */
-#sky {
+#bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    #020309  0%,
-    #03040e 20%,
-    #040718 42%,
-    #060c22 64%,
-    #091230 82%,
-    #0c1838 100%
-  );
+  background-image: url('bg.jpg');
+  background-size: cover;
+  background-position: center 18%;
+  background-repeat: no-repeat;
+  /* Darken just enough to let white text breathe.
+     Preserve the painting's own colour temperature. */
+  filter: brightness(0.78);
 }
 
-/* ── STARS ────────────────────────────────────────────
-   Static SVG. No animation except 8 stars with
-   very slow individual fades — so slow they're
-   felt rather than seen.
+/* ── Water shimmer — lower 45% of screen only ─────────
+   A CSS mask that drifts very slowly across the water
+   area. Creates a barely-perceptible light variation —
+   the sense that the water is alive, not the knowledge
+   of it. Duration 28s — nearly imperceptible motion.
 ───────────────────────────────────────────────────── */
-#stars {
+#water-shimmer {
   position: absolute;
-  inset: 0;
-  height: 58%;
-  width: 100%;
-  pointer-events: none;
-}
-
-.tw {
-  animation: tw ease-in-out infinite;
-}
-@keyframes tw {
-  0%, 100% { opacity: 1;    }
-  45%       { opacity: 0.05; }
-  72%       { opacity: 0.42; }
-}
-
-/* ── MOON ─────────────────────────────────────────────
-   One moon. Static glow. Warm ivory.
-   box-shadow creates the atmospheric softness —
-   no additional divs, no animation, no pulse.
-───────────────────────────────────────────────────── */
-#moon {
-  position: absolute;
-  top: 12%;
-  left: 50%;
-  transform: translateX(-50%);
-  width:  clamp(54px, 7vw, 96px);
-  height: clamp(54px, 7vw, 96px);
-  border-radius: 50%;
-  overflow: hidden;
-  pointer-events: none;
-  /* The glow. All of it. Static. */
-  box-shadow:
-    0 0 0 clamp(2px, 0.4vw, 5px)    rgba(255, 246, 195, 0.07),
-    0 0 clamp(8px,  1.5vw, 22px)    rgba(248, 228, 158, 0.14),
-    0 0 clamp(22px, 4vw,   58px)    rgba(238, 212, 128, 0.07),
-    0 0 clamp(50px, 9vw,  130px)    rgba(225, 195, 102, 0.03),
-    0 0 clamp(90px, 16vw, 220px)    rgba(210, 178,  80, 0.015);
-}
-
-/* Warm ivory sphere — lit from upper left */
-#moon-surface {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 38% 34%,
-    #fefcf0  0%,
-    #fdf5d4 14%,
-    #f5e5a8 30%,
-    #e2ca78 50%,
-    #c8a84e 67%,
-    #a88030 82%,
-    #7a5c12 100%
-  );
-}
-
-/* Phase shadow — written by JS. No animation. */
-#moon-shadow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-}
-
-/* Limb darkening — subtle, makes it a sphere not a disc */
-#moon-limb {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    transparent        45%,
-    rgba(20, 10, 0, 0.10) 68%,
-    rgba(12,  5, 0, 0.28) 86%,
-    rgba( 6,  2, 0, 0.48) 100%
-  );
-}
-
-/* ── SEA ──────────────────────────────────────────────
-   Dark water. Horizon is the lightest point.
-   A very faint reflection of the moon — not a beam,
-   just a soft brightening centred below it.
-   Static. No ripples. No animation.
-───────────────────────────────────────────────────── */
-#sea {
-  position: absolute;
+  left: 0; right: 0;
   bottom: 0;
-  left: 0;
-  right: 0;
-  top: 58%;
-  /* Dark water — almost no colour, just depth */
-  background: linear-gradient(
-    180deg,
-    #08111e  0%,   /* horizon — the lightest, catches sky */
-    #060e18 22%,
-    #050b13 50%,
-    #030810 78%,
-    #020609 100%
-  );
-}
-
-/* Moon reflection on water — not a beam.
-   Just a soft brightening directly below the moon.
-   Radial gradient, very low opacity, static. */
-#sea-reflection {
-  position: absolute;
-  top: -30%;
-  left: 50%;
-  transform: translateX(-50%);
-  width:  clamp(140px, 28vw, 320px);
-  height: 130%;
+  height: 45%;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse 42% 55% at 50% 8%,
-    rgba(240, 220, 145, 0.06)  0%,
-    rgba(228, 208, 128, 0.03) 38%,
-    rgba(210, 188, 108, 0.01) 62%,
-    transparent 78%
-  );
-}
-
-/* Horizon blend — sky into sea, no hard line */
-#horizon {
-  position: absolute;
-  top: 54%;
-  left: 0;
-  right: 0;
-  height: 8%;
-  transform: translateY(-50%);
-  pointer-events: none;
+  /* A gradient mask that moves across the water */
   background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(72, 108, 168, 0.048) 38%,
-    rgba(82, 120, 178, 0.062) 55%,
-    rgba(68, 102, 162, 0.030) 78%,
-    transparent 100%
+    105deg,
+    transparent                      0%,
+    rgba(180, 210, 240, 0.022)       28%,
+    rgba(200, 225, 248, 0.038)       50%,
+    rgba(180, 210, 240, 0.022)       72%,
+    transparent                      100%
   );
+  background-size: 200% 100%;
+  animation: waterdrift 28s ease-in-out infinite alternate;
+}
+@keyframes waterdrift {
+  0%   { background-position: 0%   50%; opacity: 0.6; }
+  100% { background-position: 100% 50%; opacity: 1.0; }
 }
 
-/* ── VIGNETTE ─────────────────────────────────────────
-   Darkens corners. Holds the eye in the scene.
-   Static.
+/* ── Vignette ─────────────────────────────────────────
+   Darkens all four edges. Keeps attention
+   on the centre without fighting the painting.
 ───────────────────────────────────────────────────── */
 #vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 74% 68% at 50% 44%,
-    transparent 20%,
-    rgba(1, 2, 8, 0.20) 58%,
-    rgba(0, 1, 5, 0.60) 100%
+    ellipse 76% 70% at 50% 40%,
+    transparent           18%,
+    rgba(2, 4, 10, 0.18)  55%,
+    rgba(1, 2,  7, 0.55) 100%
   );
-}
-
-/* ── SHOOTING STARS ───────────────────────────────────
-   DOM elements, CSS animation, rare.
-   Warm white. Very low opacity. One at a time.
-───────────────────────────────────────────────────── */
-#shooters {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.mm-shooter {
-  position: absolute;
-  height: 1px;
-  border-radius: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(232, 220, 178, 0.34),
-    rgba(225, 212, 162, 0.08),
-    transparent
-  );
-  transform-origin: left center;
-  opacity: 0;
-  pointer-events: none;
-  animation: mmshoot var(--d) linear forwards;
-}
-@keyframes mmshoot {
-  0%   { opacity: 0;    transform: rotate(var(--a)) scaleX(0.04); }
-  8%   { opacity: 0.36; }
-  85%  { opacity: 0.15; }
-  100% { opacity: 0;    transform: rotate(var(--a)) translateX(var(--l)) scaleX(1); }
 }
 
 /* ══════════════════════════════════════════════════════
@@ -737,10 +590,7 @@ textarea:focus {
 
   /* Scene: rebalance sky/ocean split for landscape viewports */
   #stars { height: 56%; }
-  #moon          { top: 11%; width: 82px;  height: 82px; }
-  #stars         { height: 56%; }
-  #sea           { top: 56%; }
-  #horizon       { top: 52%; }
+  /* bg covers full viewport — no scene element overrides needed */
 
   /* Layout: proper desktop column — not mobile stretched */
   main  { padding: 0 48px; align-items: center; }
@@ -799,10 +649,7 @@ textarea:focus {
 @media (min-width: 1100px) {
 
   /* Scene: moon higher and slightly larger on wide screens */
-  #moon         { top: 10%; width: 98px; height: 98px; }
-  #stars        { height: 57%; }
-  #sea          { top: 57%; }
-  #horizon      { top: 53%; }
+  /* bg covers full viewport — no scene element overrides needed */
   #stars { height: 57%; }
   #ocean        { top: 56%; }
   #horizon-haze { top: 56%; }
@@ -825,6 +672,11 @@ textarea:focus {
   .sit-message  { font-size: 24px; max-width: 500px; }
 }
 
+
+/* Mobile: shift bg down so ocean stays visible */
+@media (max-width: 480px) and (orientation: portrait) {
+  #bg { background-position: center 28%; }
+}
 /* ══════════════════════════════════════════════════════
    MOBILE (480px and below)
    Improve legibility — boost small text, tighten spacing.
